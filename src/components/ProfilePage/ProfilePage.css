@@ -1,0 +1,44 @@
+/* Main Container */
+.profile-page-container {
+    display: grid;
+    grid-template-columns: 1fr 1.5fr 1fr;
+    gap: 32px; /* Increase spacing */
+    padding: 32px;
+    background-color: #f3f4f6;
+    min-height: 100vh;
+    align-items: start;
+    box-sizing: border-box;
+}
+
+/* Left Profile Card */
+.profile-left {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    padding: 20px;
+    width: 100%;
+}
+
+/* Center Section (Single Card) */
+.profile-center {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 40px; /* Increased padding for better spacing */
+    width: 100%;
+    max-width: 600px; 
+}
+
+/* Ensures form inside doesn't look separate */
+.profile-center form {
+    width: 100%;
+}
+
+/* Right Sidebar */
+.profile-right {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    padding: 20px;
+    width: 100%;
+}
