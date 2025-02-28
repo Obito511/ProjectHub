@@ -38,21 +38,22 @@ body {
     width: 90%;
     max-width: 1200px;
     margin-top: 80px;
+    flex-direction: column;
 }
 
 .login-image-section {
-    flex: 1;
-    display: flex;
+    display: flex; /* Ensure the image is shown */
     align-items: center;
     justify-content: center;
+    width: 100%; /* Make sure the section takes up available space */
 }
 
 .login-image-section img {
     max-width: 100%;
     height: auto;
     object-fit: contain;
-    
 }
+
 
 .login-form-section {
     flex: 1;
@@ -179,10 +180,46 @@ body {
         flex: 1;
         align-items: center;
         justify-content: center;
+        transform: translateZ(30px); 
+        animation: fadeInFront 2s forwards; 
+
     }
 
     .login-form-section {
         flex: 1;
         padding: 40px;
+    }
+}
+@media (max-width: 768px) {
+    .login-image-section {
+        display: flex; 
+        justify-content: center;
+        align-items: center;
+        width: 50%;
+        height: 50%;
+        transform: translateY(30px); 
+        animation: fadeInUp 2s forwards; 
+    }
+    
+}
+@keyframes fadeInUp {
+    0% {
+        opacity: 0;
+        transform: translateY(30px); 
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0); 
+    }
+
+}
+@keyframes fadeInFront {
+    0% {
+        opacity: 0;
+        transform: translateZ(30px); 
+    }
+    100% {
+        opacity: 1;
+        transform: translateZ(0); 
     }
 }
