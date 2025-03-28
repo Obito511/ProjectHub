@@ -1,0 +1,190 @@
+.task-container {
+    margin-left: 300px; /* Adjust for sidebar */
+    padding: 20px;
+}
+
+.task-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.task-content {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.task-item {
+    padding: 15px;
+    border-radius: 12px;
+    box-shadow: 0px 3px 8px rgba(0, 0, 0, 0.1);
+    background: #ffffff;
+    position: relative;
+}
+
+.task-badges {
+    margin-top: 8px;
+    display: flex;
+    gap: 6px;
+}
+
+.status-badge {
+    background: #d4f4dd;
+    padding: 6px 10px;
+    border-radius: 15px;
+    font-size: 12px;
+    font-weight: bold;
+    color: #008000;
+}
+
+.priority-badge {
+    background: #fce4ec;
+    padding: 6px 10px;
+    border-radius: 15px;
+    font-size: 12px;
+    font-weight: bold;
+    color: #d81b60;
+}
+
+.subtask-container {
+    margin-top: 10px;
+    padding-left: 15px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.subtask-item {
+    padding: 10px;
+    border-radius: 10px;
+    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: #f9f9f9;
+}
+
+.task-meta {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px;
+}
+
+.task-time {
+    font-size: 14px;
+    font-weight: bold;
+    color: #1976d2;
+}
+
+.user-avatar {
+    width: 30px;
+    height: 30px;
+}
+
+.comment-icon {
+    color: #1976d2;
+}
+.task-header-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 15px;
+  }
+  
+  .time-badge {
+    background: #1976d2;
+    color: white;
+    padding: 6px 12px;
+    border-radius: 4px;
+    font-weight: bold;
+    margin-left: 15px;
+  }
+  
+  .status-priority-row {
+    display: flex;
+    gap: 10px;
+    margin-top: 10px;
+  }
+  
+  .subtask-header-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+  }
+  
+  /* Update existing CSS */
+  .task-item {
+    padding: 15px;
+    margin-bottom: 15px;
+    position: relative;
+  }
+  
+  .subtask-item {
+    padding: 12px;
+    margin-bottom: 8px;
+  }
+  .subtask-card-wrapper {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    width: 100%;
+  }
+  
+  .subtask-actions {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    padding: 0 8px !important;
+  }
+  
+  /* Adjust avatar size */
+  .MuiAvatar-root {
+    width: 24px !important;
+    height: 24px !important;
+  }
+  
+  /* Keep existing styles and add these */
+  .subtask-item {
+    padding: 12px;
+    margin-bottom: 8px;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+  }
+
+  .subtask-card-wrapper {
+    display: flex;
+    justify-content: space-between;
+    align-items: center; /* Center vertically */
+    width: 100%;
+  }
+  
+  .subtask-content {
+    flex: 1; /* Take up remaining space */
+  }
+  
+  .subtask-actions {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    padding: 0 8px !important;
+    margin-left: 16px; /* Add some spacing between content and actions */
+  }
+  
+  /* Adjust avatar size */
+  .MuiAvatar-root {
+    width: 24px !important;
+    height: 24px !important;
+  }
+  
+  .subtask-item {
+    padding: 12px;
+    margin-bottom: 8px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center; /* Center vertically */
+  }
