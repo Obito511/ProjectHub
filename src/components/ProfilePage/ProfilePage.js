@@ -9,6 +9,8 @@ const projects = [
     { name: "Emo Stuff", image: "obito.webp" },
     { name: "Tim Burton", image: "obito.webp" },
     { name: "Halloween", image: "obito.webp" },
+    { name: "Emo Stuff", image: "obito.webp" },
+    { name: "Emo Stuff", image: "obito.webp" },
   ];
   const user = {
     name: "Yash Ghori",
