@@ -1,0 +1,134 @@
+.task-form-container {
+    width: 100%;
+    max-width: 600px;
+    margin: auto;
+    padding: 50px;
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    
+  }
+  
+  .task-form {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    flex-direction: column;
+  }
+  
+  .task-form input,
+  .task-form textarea,
+  .task-form select {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 14px;
+  }
+  .task-inputs{
+    display: flex;
+    flex-direction: row;
+    gap: 5px;
+  }
+  .task-form textarea {
+    height: 80px;
+    resize: none;
+  }
+  .task-op{
+    display: flex;
+    gap: 10px;
+  }
+  .select{
+    width: fit-content;
+    height: fit-content;
+    align-self: center;
+  }
+  
+  
+  
+  .priority, .status {
+    padding: 5px 10px;
+    border-radius: 5px;
+    font-size: 12px;
+  }
+  
+  .priority {
+    background: #ff4d4d;
+    color: white;
+  }
+  
+  .status {
+    background: #ffcc00;
+    color: black;
+  }
+  
+  .buttons {
+    display: flex;
+    gap: 10px;
+    justify-content: flex-end;
+  }
+  
+  .create {
+    background: #007bff;
+    color: white;
+    padding: 8px 12px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    width: fit-content;
+    
+  }
+  
+  .delete {
+    background: #ddd;
+    color: black;
+    padding: 8px 12px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    width: fit-content;
+
+  }
+  .select-group {
+    width: 100%;
+  }
+  
+  .multi-select {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+    padding: 5px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    background: white;
+    align-items: center;
+  }
+  
+  .multi-select select {
+    border: none;
+    background: transparent;
+    padding: 5px;
+    height: 10px;
+  }
+  .tag {
+    display: flex;
+    align-items: center;
+    background: #fde2e2;
+    color: #d9534f;
+    padding: 5px 10px;
+    border-radius: 15px;
+    font-size: 12px;
+    height: 20px;
+  }
+  
+  .tag button {
+    background: transparent;
+    border: none;
+    color: #d9534f;
+    font-size: 12px;
+    cursor: pointer;
+    margin-left: 5px;
+
+  }  
+  
+  
