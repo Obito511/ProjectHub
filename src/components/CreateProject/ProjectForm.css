@@ -1,103 +1,126 @@
+/* General Layout */
 body {
-    font-family: Arial, sans-serif;
-    background-color: #f5f7fa;
-    margin: 0;
-    padding: 0;
-  }
-  
-  .page-container {
-    max-width: 1200px; /* Adjust width if necessary */
-    margin: 40px auto;
-    padding: 20px;
-  }
-  
-  .breadcrumb {
-    color: #a0aec0;
-    font-size: 14px;
-    margin-bottom: 10px;
-    margin-right: 800px;
-  }
-  
-  .container {
-    width: 100%; /* Adjust to take more space */
-    max-width: 4000px; /* Ensures it doesn't get too wide on large screens */
-    margin-left: 100px;
-    padding: 40px;
-    border-radius: 10px;
-    background: white;
-    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
-  }
-  
-  
-  .form-section {
-    width: 100%;
-    display: flex;
-    justify-content: space-between;
-    gap: 20px;
-    flex-wrap: wrap;
-  }
-  
-  
-  .form-group {
-    display: flex;
-    flex-direction: column;
-    margin-bottom: 20px;
-    flex: 1;
-  }
-  
-  label {
-    font-weight: bold;
-    margin-bottom: 5px;
-  }
-  
-  input, select, textarea {
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    font-size: 16px;
-  }
-  
-  textarea {
-    resize: none;
-    height: 80px;
-  }
-  
-  .roles-container {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    background: #f9fafb;
-    padding: 10px;
-    border-radius: 5px;
-  }
-  
-  .role-item {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-  }
-  
-  .button-group {
-    display: flex;
-    justify-content: flex-end;
-    gap: 10px;
-  }
-  
-  .create-btn {
-    background-color: #007bff;
-    color: white;
-    padding: 10px 20px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-  }
-  
-  .delete-btn {
-    background-color: #e0e0e0;
-    color: #555;
-    padding: 10px 20px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-  }
-  
+  font-family: Arial, sans-serif;
+  background-color: #f5f7fa;
+  margin: 0;
+  padding: 0;
+}
+
+/* Container Layout */
+.layout {
+  display: flex;
+  min-height: 100vh;
+}
+
+.main-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Page Content Styling */
+.page-container {
+  padding: 20px 40px;
+}
+
+.breadcrumb {
+  color: #718096;
+  font-size: 14px;
+  margin-bottom: 20px;
+}
+
+/* Main Card Container */
+.container {
+  width: 100%;
+  background-color: white;
+  border-radius: 10px;
+  padding: 30px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+/* Form Layout */
+.form-section {
+  display: flex;
+  gap: 20px;
+  flex-wrap: wrap;
+  margin-bottom: 20px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-width: 250px;
+}
+
+label {
+  font-weight: 600;
+  margin-bottom: 6px;
+  color: #2d3748;
+}
+
+input,
+select,
+textarea {
+  padding: 12px;
+  border: 1px solid #cbd5e0;
+  border-radius: 6px;
+  font-size: 14px;
+  background-color: #f9fafb;
+}
+
+textarea {
+  resize: none;
+  height: 100px;
+}
+
+/* Roles Section */
+.roles-container {
+  background-color: #edf2f7;
+  border-radius: 8px;
+  padding: 10px;
+  margin-top: 10px;
+}
+
+.role-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 5px 0;
+}
+
+/* Button Styles */
+.button-group {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 20px;
+  gap: 10px;
+}
+
+.create-btn {
+  background-color: #3182ce;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 6px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.delete-btn {
+  background-color: #e2e8f0;
+  color: #2d3748;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 6px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.create-btn:hover {
+  background-color: #2b6cb0;
+}
+
+.delete-btn:hover {
+  background-color: #cbd5e0;
+}

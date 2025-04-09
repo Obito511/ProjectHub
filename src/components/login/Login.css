@@ -212,6 +212,7 @@ body {
         transform: translateY(0); 
     }
 
+    
 }
 @keyframes fadeInFront {
     0% {
@@ -223,3 +224,46 @@ body {
         transform: translateZ(0); 
     }
 }
+.switch-tabs {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-right: 20px;
+}
+
+.switch-tabs button {
+    padding: 8px 16px;
+    border: none;
+    background-color: transparent;
+    cursor: pointer;
+    font-weight: bold;
+    font-size: 1rem;
+    color: #555;
+    border-bottom: 2px solid transparent;
+    transition: all 0.3s ease;
+}
+
+.switch-tabs button.active {
+    color: #000;
+    border-bottom: 2px solid #000;
+}
+.input-group {
+    width: 100%;
+    margin-bottom: 20px;
+}
+
+.input-group label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+}
+
+.input-group input {
+    width: 100%;
+    padding: 10px;
+    font-size: 1rem;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    box-sizing: border-box;
+}
+

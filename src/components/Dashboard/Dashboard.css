@@ -1,0 +1,74 @@
+.dashboard-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 30px;
+    padding: 30px;
+    flex: 1;
+    background-color: #f4f7fe;
+    min-height: calc(100vh - 80px); /* makes sure it stretches nicely */
+    box-sizing: border-box;
+  }
+  .main-layout {
+    display: flex;
+    width: 100%;
+  }
+  
+  .dashboard {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(400px, 1fr)); /* Wider columns */
+    gap: 30px;
+    padding: 40px;
+    flex: 1;
+    background-color: #f4f7fe;
+    min-height: 100vh;
+    box-sizing: border-box;
+    width: 100%;
+  }
+  
+  .card {
+    background-color: #ffffff;
+    border-radius: 16px;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
+    padding: 30px;
+    min-height: 420px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    font-size: 16px;
+    width: 90%; /* Ensure cards fill grid cells */
+  }
+  
+  .card h2 {
+    font-size: 24px;
+    color: #2b3674;
+    margin-bottom: 20px;
+  }
+  
+  .project-images {
+    display: flex;
+    gap: 15px;
+    margin-bottom: 15px;
+  }
+  
+  .project-images img {
+    width: 30%;
+    border-radius: 10px;
+    object-fit: cover;
+    height: 100px;
+  }
+  
+  .dropdown {
+    margin-top: auto;
+    padding: 10px 14px;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    font-size: 15px;
+    background-color: #f4f7fe;
+    color: #2b3674;
+  }
+  @media screen and (max-width: 1024px) {
+    .dashboard-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+  
