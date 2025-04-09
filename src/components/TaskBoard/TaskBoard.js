@@ -5,7 +5,8 @@ import AddIcon from "@mui/icons-material/Add";
 import FileUploadIcon from "@mui/icons-material/FileUpload";
 import CommentIcon from "@mui/icons-material/Comment";
 import SearchIcon from "@mui/icons-material/Search";
-
+import Vnavbar from '../Vnavbar/Vnavbar';
+import Navbar from '../Navbar/Navbar';
 const TaskBoard = () => {
     const [view, setView] = useState("List View");
 
@@ -73,7 +74,14 @@ const TaskBoard = () => {
   };
 
   return (
-    <DragDropContext onDragEnd={onDragEnd}>
+    <div className="App">
+      <div className='div0'>
+           <Navbar />
+          
+        <div className='div2'>
+            <div className='div3'><Vnavbar/></div>
+            <div className='div4'>
+            <DragDropContext onDragEnd={onDragEnd}>
       <div className="task-board">
         <h2>Tasks</h2>
         <div className="tasks">
@@ -164,6 +172,12 @@ const TaskBoard = () => {
       </div>
     </DragDropContext>
   );
+            </div>
+        </div>
+      </div>
+    </div>
+  );
+    
 };
 
 export default TaskBoard;

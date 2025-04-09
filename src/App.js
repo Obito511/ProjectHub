@@ -1,10 +1,13 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import './App.css';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 
 import Login from './components/login/Login';
 import Navbar from './components/Navbar/Navbar';
 import Vnavbar from './components/Vnavbar/Vnavbar';
+import TaskBoard from "./components/TaskBoard/TaskBoard";
+
 import Task from './components/Task/Task.js';
 import ProjectForm from './components/CreateProject/ProjectForm.js';
 import TaskBoard from './components/TaskBoard/TaskBoard';

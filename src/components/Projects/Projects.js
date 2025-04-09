@@ -1,4 +1,7 @@
 import React, { useState } from "react";
+
+import Vnavbar from '../Vnavbar/Vnavbar';
+import Navbar from '../Navbar/Navbar';
 import "./Projects.css"; 
 
 import Navbar from "../Navbar/Navbar";
@@ -31,6 +34,7 @@ export default function ProjectDashboard() {
   };
 
   return (
+
     <>
       <Navbar />
       <div className="main-layout">
@@ -102,6 +106,7 @@ export default function ProjectDashboard() {
           </div>
         </div>
       </div>
+
     </>
   );
 }

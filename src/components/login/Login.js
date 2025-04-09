@@ -1,4 +1,7 @@
+
 import React, { useState } from 'react';
+import ProjectsList from '../ProjectsList/ProjectsList';
+
 import './Login.css';
 import { useNavigate } from 'react-router-dom';
 
@@ -8,6 +11,8 @@ const Auth = () => {
   const [lastName, setLastName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [errorMsg, setErrorMsg] = useState('');
+
 
   const navigate = useNavigate();
 
@@ -136,6 +141,7 @@ const Auth = () => {
                   required
                 />
               </div>
+
 
               {isLogin && (
                 <div className="form-options">

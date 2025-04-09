@@ -1,12 +1,21 @@
+
+import Login from "../login/Login";
+import { Link } from 'react-router-dom';
+
+import './Vnavbar.css';
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import "./Vnavbar.css";
 
 import DashboardIcon from "@mui/icons-material/Dashboard";
 import TaskIcon from "@mui/icons-material/Task";
+import TaskBoard from "../TaskBoard/TaskBoard";
+import ProjectDashboard from '../Projects/Projects';
+
 import ListAltIcon from "@mui/icons-material/ListAlt";
 import BarChartIcon from "@mui/icons-material/BarChart";
 import SettingsIcon from "@mui/icons-material/Settings";
+
 import PersonIcon from "@mui/icons-material/Person";
 import AddTaskIcon from "@mui/icons-material/AddTask";
 import AddBoxIcon from "@mui/icons-material/AddBox";
@@ -24,6 +33,7 @@ function Vnavbar() {
         <li className="sidebar-item" onClick={() => navigate("/task")}>
           <TaskIcon className="icon" />
           <span>Tasks</span>
+          </Link>
         </li>
         <li className="sidebar-item" onClick={() => navigate("/create-task")}>
           <AddTaskIcon className="icon" />

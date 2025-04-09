@@ -1,14 +1,38 @@
-import React, { useState } from "react";
+import React, { useState,useEffect }from "react";
 import "./Navbar.css"; 
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import SearchIcon from "@mui/icons-material/Search";
 import MenuIcon from "@mui/icons-material/Menu";
 import CloseIcon from "@mui/icons-material/Close";
 import NotificationsNoneIcon from '@mui/icons-material/NotificationsNone';
+
 function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
-
+  const [user, setUser] = useState(null);
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (token) {
+      fetch("http://localhost:8080/api/auth/me", {
+        method: "GET",
+        headers: {
+          "Authorization": `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+        credentials: "include", 
+      })
+        .then(res => res.json())
+        .then(data => {
+          console.log("Current user:", data);
+          setUser(data);
+        })
+        .catch(error => {
+          console.log("Error fetching user data:", error);
+        });
+    }
+  }, []);
+  
+  
   return (
     <nav className="navbar">
       <div className="navbar-left">
@@ -34,8 +58,8 @@ function Navbar() {
         <div className="profile">
           <img src="https://i.pravatar.cc/32" alt="Profile" className="profile-pic" />
           <div className="profile-info">
-            <span className="profile-name">Mohamed Aziz Jallali</span>
-            <span className="profile-location">Hlif</span>
+            <span className="profile-name">{user?.firstName} {user?.lastName}</span>
+            <span className="profile-location">{user?.timezone}</span>
           </div>
         </div>
       </div>
