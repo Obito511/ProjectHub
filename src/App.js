@@ -1,16 +1,12 @@
 import logo from './logo.svg';
 import './App.css';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 
 import Login from './components/login/Login';
 import Navbar from './components/Navbar/Navbar';
 
 import Vnavbar from './components/Vnavbar/Vnavbar';
-
-import Task from './components/Task/Task.js';
-import ProjectForm from './components/CreateProject/ProjectForm.js';
-
 import TaskBoard from "./components/TaskBoard/TaskBoard";
-
 
 import ProfilePage from './components/ProfilePage/ProfilePage';
 import ProfileCard from './components/ProfileCard/ProfileCard';
@@ -21,34 +17,15 @@ import TaskForm from './components/createtask/Createtask';
 
 function App() {
   return (
-    <div className="App">
-
-      <div className='div1'>
-        <Navbar/>
-        <div className='div2'>
-        <ProjectForm/>
-        </div>
-        <div className='div3'>
-        <Vnavbar/>
-        </div>
+    <Router>
+      <div className="App">
+        <Routes>
+          <Route path="/" element={<Login />} />
+          <Route path="/projectslist" element={<ProjectDashboard />} />
+        </Routes>
       </div>
-      
-      
-
-
-     </div>
-
-      <div className='div0'>
-           <Navbar />
-          
-        <div className='div2'>
-            <div className='div3'><Vnavbar/></div>
-            <div className='div4'><TaskForm/></div>
-                
-        </div>    
-      </div>
-    </div>
-
+    </Router>
+    
   );
 }
 

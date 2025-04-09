@@ -1,16 +1,47 @@
+
 import React, { useState } from 'react';
+import ProjectsList from '../ProjectsList/ProjectsList';
+
 import './Login.css';
 
 const Login = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+  const [errorMsg, setErrorMsg] = useState('');
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log('Username:', username);
-    console.log('Password:', password);
-  };
+    setErrorMsg('');
 
+    try {
+      const response = await fetch('http://localhost:8080/api/auth/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          email: username,  
+          password: password
+        }),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || 'Login failed');
+      }
+
+      const data = await response.json();
+      const token = data.token;
+      console.log('Login successful, token:', token);
+
+      localStorage.setItem('token', token);
+
+      window.location.href = '/ProjectsList';
+    } catch (error) {
+      console.error('Error during login:', error);
+      setErrorMsg(error.message);
+    }
+  };
   return (
     <>
       <header className="login-header">
@@ -53,7 +84,7 @@ const Login = () => {
                 </label>
                 <a href="#">Forgot Password</a>
               </div>
-              <button type="submit">Log in</button>
+              <button type="submit" >Log in</button>
               <p className="signup-prompt">
                 Don't have an account? <a href="#">Sign up for free</a>
               </p>
