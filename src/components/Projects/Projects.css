@@ -4,6 +4,14 @@
     padding: 2rem;
     font-family: sans-serif; 
   }
+  .main-layout {
+    display: flex;
+  }
+  
+  .projects-page {
+    flex: 1;
+    padding: 20px;
+  }
   
   .projects-header {
     display: flex;

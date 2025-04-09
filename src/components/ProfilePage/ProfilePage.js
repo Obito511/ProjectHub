@@ -3,6 +3,8 @@ import React from "react";
 import EditProfileForm from "../EditProfileForm/EditProfileForm";
 import ProfileCard from "../ProfileCard/ProfileCard";
 import ProjectsList from "../ProjectsList/ProjectsList";
+import Vnavbar from "../Vnavbar/Vnavbar";
+import Navbar from "../Navbar/Navbar";
 import './ProfilePage.css';
 
 const projects = [
@@ -11,27 +13,35 @@ const projects = [
     { name: "Halloween", image: "obito.webp" },
     { name: "Emo Stuff", image: "obito.webp" },
     { name: "Emo Stuff", image: "obito.webp" },
-  ];
-  const user = {
+];
+
+const user = {
     name: "Yash Ghori",
     location: "Ahmedabad, Gujarat",
     designation: "UI Intern",
     phone: "+91 7048144030",
     email: "yghori@asite.com",
-  };
+};
+
 const ProfilePage = () => {
     return (
+        <>
+        <Navbar />
         <div className="profile-page-container">
+          <Vnavbar />
+          <div className="profile-content-area">
             <div className="profile-left">
-                <ProfileCard />
+              <ProfileCard />
             </div>
             <div className="profile-center">
-            <EditProfileForm users={user} />
+              <EditProfileForm users={user} />
             </div>
             <div className="profile-right">
-            <ProjectsList projects={projects} />
+              <ProjectsList projects={projects} />
             </div>
+          </div>
         </div>
+      </>
     );
 };
 

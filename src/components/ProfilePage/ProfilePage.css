@@ -1,81 +1,67 @@
-/* Main Container */
+/* Unified Page Container */
 .profile-page-container {
     display: flex;
-   flex-direction: row;
-   margin-left:  30px ;
-   margin-top:  15px ;
-   gap:10px;
-}
-
-/* Left Profile Card */
-.profile-left {
+    min-height: calc(100vh - 64px); /* assuming Navbar is 64px tall */
+  }
+  .vnavbar {
+    width: 240px;
+    background-color: #fff;
+    border-right: 1px solid #e5e5e5;
+    position: sticky;
+    top: 64px; /* height of the top Navbar */
+    height: calc(100vh - 64px);
+    padding: 20px 0;
+    overflow-y: auto;
+    z-index: 10;
+  }
+  .profile-content-area {
+    flex: 1;
+    display: flex;
+    gap: 20px;
+    padding: 20px;
+  }
+  
+  /* Left Profile Card */
+  .profile-left {
+    flex: 1;
+    max-width: 300px;
+  }
+  
+  /* Center Form Section */
+  .profile-center {
+    flex: 2;
     display: flex;
     flex-direction: column;
-    
-}
-
-/* Center Section (Single Card) */
-.profile-center {
-    display: flex;
-    flex-direction: column;
-    width: 350px;
-   
-}
-
-/* Ensures form inside doesn't look separate */
-.profile-center form {
-    width: 100%;
-}
-
-/* Right Sidebar */
-.profile-right {
-    display: flex;
-    flex-direction: column;
-    margin-left:  64px ;
-}
-@media screen and (max-width: 1024px) {
+  }
+  
+  /* Right Project List */
+  .profile-right {
+    flex: 1;
+    max-width: 300px;
+  }
+  
+  /* Responsive Breakpoints */
+  @media screen and (max-width: 1024px) {
     .profile-page-container {
-        flex-direction: column; 
-        align-items: center;
-        margin-left: 0;
+      flex-direction: column;
+      align-items: center;
     }
-
+  
     .profile-left,
     .profile-center,
     .profile-right {
-        width: 90%; 
-        margin-left: 0;
+      width: 100%;
+      max-width: 100%;
     }
-
+  
     .profile-right {
-        margin-top: 20px; 
+      margin-top: 20px;
     }
-}
-
-@media screen and (max-width: 768px) {
-    .profile-center {
-        width: 100%;
-    }
-
-    .profile-left,
-    .profile-right {
-        width: 100%;
-        text-align: center;
-    }
-}
-
-@media screen and (max-width: 480px) {
+  }
+  
+  @media screen and (max-width: 480px) {
     .profile-page-container {
-        padding: 10px;
+      padding: 10px;
     }
-
-    .profile-left,
-    .profile-center,
-    .profile-right {
-        width: 100%;
-    }
-
-    .profile-right {
-        margin-left: 0;
-    }
-}
+  }
+  
