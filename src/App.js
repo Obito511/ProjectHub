@@ -17,14 +17,16 @@ import TaskForm from './components/createtask/Createtask';
 
 function App() {
   return (
+    
     <Router>
-      <div className="App">
-        <Routes>
-          <Route path="/" element={<Login />} />
-          <Route path="/projectslist" element={<ProjectDashboard />} />
-        </Routes>
-      </div>
-    </Router>
+    <div className="App">
+      <Routes>
+        <Route path="/" element={<Login />} />
+        <Route path="/projectslist" element={<ProjectDashboard />} />
+        <Route path="/TaskBoard" element={<TaskBoard />} />
+      </Routes>
+    </div>
+  </Router>
     
   );
 }

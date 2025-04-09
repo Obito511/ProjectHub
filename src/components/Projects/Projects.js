@@ -1,4 +1,7 @@
 import React, { useState } from "react";
+
+import Vnavbar from '../Vnavbar/Vnavbar';
+import Navbar from '../Navbar/Navbar';
 import "./Projects.css"; 
 import HourglassTopIcon from '@mui/icons-material/HourglassTop';
 import ErrorOutlineIcon from '@mui/icons-material/ErrorOutline';
@@ -27,7 +30,14 @@ export default function ProjectDashboard() {
   };
 
   return (
-    <div className="projects-page">
+    <div className="App">
+      <div className='div0'>
+           <Navbar />
+          
+        <div className='div2'>
+            <div className='div3'><Vnavbar/></div>
+            <div className='div4'>
+            <div className="projects-page">
       <div className="projects-header">
         <h1>Projects</h1>
         <button className="create-button">Create</button>
@@ -98,5 +108,12 @@ export default function ProjectDashboard() {
         </button>
       </div>
     </div>
+            </div>
+                
+        </div>    
+      </div>
+    </div>
+    
+
   );
 }
