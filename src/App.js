@@ -1,7 +1,6 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import './App.css';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 
 import Login from './components/login/Login';
 import Navbar from './components/Navbar/Navbar';
@@ -10,7 +9,6 @@ import TaskBoard from "./components/TaskBoard/TaskBoard";
 
 import Task from './components/Task/Task.js';
 import ProjectForm from './components/CreateProject/ProjectForm.js';
-import TaskBoard from './components/TaskBoard/TaskBoard';
 import ProfilePage from './components/ProfilePage/ProfilePage';
 import ProfileCard from './components/ProfileCard/ProfileCard';
 import ProjectsList from './components/ProjectsList/ProjectsList';

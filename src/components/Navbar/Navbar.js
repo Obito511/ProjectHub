@@ -13,7 +13,7 @@ function Navbar() {
   useEffect(() => {
     const token = localStorage.getItem("token");
     if (token) {
-      fetch("http://localhost:8080/api/auth/me", {
+      fetch("http://localhost:9090/api/auth/me", {
         method: "GET",
         headers: {
           "Authorization": `Bearer ${token}`,
@@ -58,7 +58,7 @@ function Navbar() {
         <div className="profile">
           <img src="https://i.pravatar.cc/32" alt="Profile" className="profile-pic" />
           <div className="profile-info">
-            <span className="profile-name">{user?.firstName} {user?.lastName}</span>
+            <span className="profile-name">{user?.first_name} {user?.last_name}</span>
             <span className="profile-location">{user?.timezone}</span>
           </div>
         </div>
