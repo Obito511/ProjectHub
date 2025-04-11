@@ -14,7 +14,7 @@ function Navbar() {
   useEffect(() => {
     const token = localStorage.getItem("token");
     if (token) {
-      fetch("http://localhost:8080/api/auth/me", {
+      fetch("http://localhost:9090/api/auth/me", {
         method: "GET",
         headers: {
           "Authorization": `Bearer ${token}`,

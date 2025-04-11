@@ -62,31 +62,38 @@ const Auth = () => {
       if (!isLogin) {
         // Registration success
         alert('Account created successfully! Please login.');
-        setIsLogin(true); // Switch to login form
+        setIsLogin(true);
         setFirstName('');
         setLastName('');
-        setPassword(''); // Clear password field
+        setPassword('');
       } else {
+
+        // Login success - store token and get user details
+        console.log('Login response:', data);
         localStorage.setItem('token', data.token);
-console.log('Token stored in localStorage:', data.token);
-
-const userResponse = await fetch('http://localhost:8080/api/auth/me', {
-  method: 'GET',
-  headers: {
-    'Content-Type': 'application/json',
-    'Authorization': `Bearer ${data.token}`
-  }
-});
-
-if (!userResponse.ok) {
-  throw new Error('Failed to fetch user data');
-}
-
-const userData = await userResponse.json();
-localStorage.setItem('userId', userData.id);
-console.log('User ID stored in localStorage:', userData.id); 
-
-navigate('/accueil');
+        
+        try {
+          // Fetch user details using the token
+          const userResponse = await fetch('http://localhost:9090/api/auth/me', {
+            headers: {
+              'Authorization': `Bearer ${data.token}`
+            }
+          });
+  
+          if (!userResponse.ok) {
+            const error = await handleApiError(userResponse);
+            throw new Error(error);
+          }
+  
+          const userData = await userResponse.json();
+          localStorage.setItem('userId', userData.id); // Store user ID
+          console.log('User ID stored:', userData.id);
+          navigate('/accueil');
+        } catch (err) {
+          console.error('Error fetching user details:', err);
+          alert('Login successful but failed to fetch user details. Please try again.');
+          localStorage.removeItem('token'); // Clean up token if user details fetch fails
+        }
 
       }
   

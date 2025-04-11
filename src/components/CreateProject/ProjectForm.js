@@ -1,30 +1,44 @@
 import React, { useState } from "react";
+import axios from "axios";
 import "./ProjectForm.css";
 import Vnavbar from "../Vnavbar/Vnavbar";
 import Navbar from "../Navbar/Navbar";
 
 const ProjectForm = () => {
-  const [title, setTitle] = useState("Addodle");
-  const [projectType, setProjectType] = useState("Type - I");
-  const [startDate, setStartDate] = useState("2022-05-01");
-  const [endDate, setEndDate] = useState("2022-12-01");
-  const [description, setDescription] = useState(
-    "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text"
-  );
-  const [roles, setRoles] = useState([
-    { name: "Yash", role: "Team lead", selected: true },
-    { name: "Yash", role: "Team lead", selected: false },
-    { name: "Yash", role: "Team lead", selected: false },
-    { name: "Yash", role: "Team lead", selected: false },
-    { name: "Yash", role: "Team lead", selected: false },
-  ]);
+  const [projectData, setProjectData] = useState({
+    nom: "",
+    description: "",
+  });
 
-  const handleRoleChange = (index) => {
-    setRoles((prevRoles) =>
-      prevRoles.map((role, i) =>
-        i === index ? { ...role, selected: !role.selected } : role
-      )
-    );
+  const handleCreate = async () => {
+    const token = localStorage.getItem("token");
+    
+    try {
+      const response = await axios.post(
+        "http://localhost:9090/api/projects/create", // Fixed endpoint (added 's' in projects)
+        projectData,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      console.log("Project created:", response.data);
+      alert("Project created successfully!");
+      // Reset form after successful creation
+      setProjectData({ nom: "", description: "" });
+    } catch (error) {
+      console.error("Error creating project:", error.response?.data || error.message);
+      alert(error.response?.data?.message || "Failed to create project");
+    }
+  };
+
+  const handleInputChange = (e) => {
+    setProjectData({
+      ...projectData,
+      [e.target.name]: e.target.value
+    });
   };
 
   return (
@@ -40,64 +54,26 @@ const ProjectForm = () => {
                 <label>Project Title</label>
                 <input
                   type="text"
-                  value={title}
-                  onChange={(e) => setTitle(e.target.value)}
-                />
-              </div>
-              <div className="form-group">
-                <label>Project Type</label>
-                <select
-                  value={projectType}
-                  onChange={(e) => setProjectType(e.target.value)}
-                >
-                  <option value="Type - I">Type - I</option>
-                  <option value="Type - II">Type - II</option>
-                </select>
-              </div>
-              <div className="form-group">
-                <label>Start Date</label>
-                <input
-                  type="date"
-                  value={startDate}
-                  onChange={(e) => setStartDate(e.target.value)}
-                />
-              </div>
-              <div className="form-group">
-                <label>End Date</label>
-                <input
-                  type="date"
-                  value={endDate}
-                  onChange={(e) => setEndDate(e.target.value)}
+                  name="nom"
+                  value={projectData.nom}
+                  onChange={handleInputChange}
                 />
               </div>
             </div>
+
             <div className="form-group">
               <label>Project Description</label>
               <textarea
-                value={description}
-                onChange={(e) => setDescription(e.target.value)}
+                name="description"
+                value={projectData.description}
+                onChange={handleInputChange}
               />
             </div>
-            <div className="form-group roles">
-              <label>Project Roles</label>
-              <div className="roles-container">
-                {roles.map((role, index) => (
-                  <div key={index} className="role-item">
-                    <input
-                      type="checkbox"
-                      checked={role.selected}
-                      onChange={() => handleRoleChange(index)}
-                    />
-                    <span>
-                      {role.name} <em>{role.role}</em>
-                    </span>
-                  </div>
-                ))}
-              </div>
-            </div>
+
             <div className="button-group">
-              <button className="delete-btn">Delete</button>
-              <button className="create-btn">Create</button>
+              <button className="create-btn" onClick={handleCreate}>
+                Create
+              </button>
             </div>
           </div>
         </div>

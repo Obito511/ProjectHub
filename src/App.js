@@ -5,7 +5,6 @@ import './App.css';
 import Login from './components/login/Login';
 import Task from './components/Task/Task.js';
 import ProjectForm from './components/CreateProject/ProjectForm.js';
-import TaskBoard from './components/TaskBoard/TaskBoard';
 import ProfilePage from './components/ProfilePage/ProfilePage';
 import ProfileCard from './components/ProfileCard/ProfileCard';
 import ProjectsList from './components/ProjectsList/ProjectsList';
