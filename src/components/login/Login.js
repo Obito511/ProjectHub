@@ -39,7 +39,7 @@ const Auth = () => {
         };
   
     try {
-      const response = await fetch(`http://localhost:9090/api/auth/${endpoint}`, {
+      const response = await fetch(`http://localhost:8080/api/auth/${endpoint}`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(body)
@@ -67,6 +67,7 @@ const Auth = () => {
         setLastName('');
         setPassword('');
       } else {
+
         // Login success - store token and get user details
         console.log('Login response:', data);
         localStorage.setItem('token', data.token);
@@ -93,6 +94,7 @@ const Auth = () => {
           alert('Login successful but failed to fetch user details. Please try again.');
           localStorage.removeItem('token'); // Clean up token if user details fetch fails
         }
+
       }
   
     } catch (err) {
