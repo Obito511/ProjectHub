@@ -30,11 +30,12 @@ function Vnavbar() {
           <DashboardIcon className="icon" />
           <span>Dashboard</span>
         </li>
-        <li className="sidebar-item" onClick={() => navigate("/task")}>
-          <TaskIcon className="icon" />
-          <span>Tasks</span>
-          </Link>
-        </li>
+        <li className="sidebar-item">
+  <Link to="/tasks">
+    <TaskIcon className="icon" />
+    <span>Tasks</span>
+  </Link>
+</li>
         <li className="sidebar-item" onClick={() => navigate("/create-task")}>
           <AddTaskIcon className="icon" />
           <span>Create Task</span>
