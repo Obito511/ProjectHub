@@ -1,11 +1,9 @@
 import React, { useState } from "react";
 
 import Vnavbar from '../Vnavbar/Vnavbar';
-import Navbar from '../Navbar/Navbar';
 import "./Projects.css"; 
 
 import Navbar from "../Navbar/Navbar";
-import Vnavbar from "../Vnavbar/Vnavbar";
 
 import HourglassTopIcon from '@mui/icons-material/HourglassTop';
 import ErrorOutlineIcon from '@mui/icons-material/ErrorOutline';

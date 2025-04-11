@@ -1,4 +1,4 @@
-import React, { useState,useEffect }from "react";
+import React, { useState, useEffect } from "react";
 import "./Navbar.css"; 
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import SearchIcon from "@mui/icons-material/Search";
@@ -10,6 +10,7 @@ function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
   const [user, setUser] = useState(null);
+
   useEffect(() => {
     const token = localStorage.getItem("token");
     if (token) {
@@ -21,18 +22,26 @@ function Navbar() {
         },
         credentials: "include", 
       })
-        .then(res => res.json())
-        .then(data => {
-          console.log("Current user:", data);
-          setUser(data);
+        .then(res => {
+          console.log("Response Status:", res.status); // Log the status code
+          return res.text(); // Get the raw response body
+        })
+        .then(text => {
+          console.log("Response Body:", text); // Log raw response body
+          try {
+            const data = JSON.parse(text); // Manually parse if needed
+            console.log("Current user:", data);
+            setUser(data);
+          } catch (e) {
+            console.log("Error parsing response:", e); // Handle JSON parse errors
+          }
         })
         .catch(error => {
-          console.log("Error fetching user data:", error);
+          console.log("Error fetching user data:", error); // Handle fetch errors
         });
     }
   }, []);
-  
-  
+
   return (
     <nav className="navbar">
       <div className="navbar-left">
@@ -58,7 +67,7 @@ function Navbar() {
         <div className="profile">
           <img src="https://i.pravatar.cc/32" alt="Profile" className="profile-pic" />
           <div className="profile-info">
-            <span className="profile-name">{user?.firstName} {user?.lastName}</span>
+            <span className="profile-name">{user?.first_name} {user?.last_name}</span>
             <span className="profile-location">{user?.timezone}</span>
           </div>
         </div>

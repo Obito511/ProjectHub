@@ -39,7 +39,7 @@ const Auth = () => {
         };
   
     try {
-      const response = await fetch(`http://localhost:9090/api/auth/${endpoint}`, {
+      const response = await fetch(`http://localhost:8080/api/auth/${endpoint}`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(body)
@@ -67,10 +67,27 @@ const Auth = () => {
         setLastName('');
         setPassword(''); // Clear password field
       } else {
-        // Login success
-        console.log('Logged in with token:', data.token);
         localStorage.setItem('token', data.token);
-        navigate('/accueil');
+console.log('Token stored in localStorage:', data.token);
+
+const userResponse = await fetch('http://localhost:8080/api/auth/me', {
+  method: 'GET',
+  headers: {
+    'Content-Type': 'application/json',
+    'Authorization': `Bearer ${data.token}`
+  }
+});
+
+if (!userResponse.ok) {
+  throw new Error('Failed to fetch user data');
+}
+
+const userData = await userResponse.json();
+localStorage.setItem('userId', userData.id);
+console.log('User ID stored in localStorage:', userData.id); 
+
+navigate('/accueil');
+
       }
   
     } catch (err) {
