@@ -36,27 +36,29 @@ const ProjectsList = () => {
 
   if (loading) return <div className="card">Loading projects...</div>;
   if (error) return <div className="card">Error: {error}</div>;
+  const lastProject = projects.length > 0 ? projects[projects.length - 1] : null;
 
   return (
     <div className="card projects-list">
-      <h2>Projects</h2>
+      <h2>Latest Project</h2>
       <div className="projects-grid">
-        {projects.length > 0 ? (
-          projects.map((project) => (
-            <div key={project.id} className="project-item">
-              <img 
-                src={project.imageUrl || "/logo.png"} 
-                alt={project.name || "Project"}
-              />
-              <div className="project-info">
-                <h3>{project.name}</h3>
-                <p>{project.description}</p>
-                <span>Status: {project.status}</span>
+        {lastProject ? (
+          <div key={lastProject.id} className="project-item">
+            <img 
+              src={lastProject.imageUrl || "/logo.png"} 
+              alt={lastProject.name || "Project"}
+              className="project-image"
+            />
+            <div className="project-info">
+              <h3 className="project-name">{lastProject.name}</h3>
+              <p className="project-description">{lastProject.description}</p>
+              <div className={`project-status ${(lastProject.status || 'unknown').toLowerCase()}`}>
+                {lastProject.status || 'Status unavailable'}
               </div>
             </div>
-          ))
+          </div>
         ) : (
-          <p>No projects found. Create your first project!</p>
+          <p className="no-projects">No projects found. Create your first project!</p>
         )}
       </div>
     </div>

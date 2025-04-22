@@ -5,12 +5,17 @@ import SearchIcon from "@mui/icons-material/Search";
 import MenuIcon from "@mui/icons-material/Menu";
 import CloseIcon from "@mui/icons-material/Close";
 import NotificationsNoneIcon from '@mui/icons-material/NotificationsNone';
+import { useNavigate } from "react-router-dom";
+
 
 function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
   const [user, setUser] = useState(null);
+  const navigate = useNavigate();
 
+  // Add missing state declaration here
+  const [showDisconnect, setShowDisconnect] = useState(false);
   useEffect(() => {
     const token = localStorage.getItem("token");
     if (token) {
@@ -41,7 +46,17 @@ function Navbar() {
         });
     }
   }, []);
+  const handleDisconnect = () => {
+    localStorage.removeItem("token");
+    localStorage.removeItem("userId");
+  
+    setUser(null);
+    setShowDisconnect(false);
+    navigate("/login"); // Add redirect here
 
+    // Close the disconnect button
+    // Add any additional logout logic here (e.g., redirect)
+  };
   return (
     <nav className="navbar">
       <div className="navbar-left">
@@ -64,13 +79,24 @@ function Navbar() {
         <button className="notification-icon">
           <NotificationsNoneIcon className="icon" />
         </button>
-        <div className="profile">
-          <img src="https://i.pravatar.cc/32" alt="Profile" className="profile-pic" />
-          <div className="profile-info">
-            <span className="profile-name">{user?.first_name} {user?.last_name}</span>
-            <span className="profile-location">{user?.timezone}</span>
-          </div>
-        </div>
+        <div className="profile-container">
+  <div 
+    className="profile" 
+    onClick={() => setShowDisconnect(!showDisconnect)}
+  >
+    <img src="https://i.pravatar.cc/32" alt="Profile" className="profile-pic" />
+    <div className="profile-info">
+      <span className="profile-name">{user?.first_name} {user?.last_name}</span>
+      <span className="profile-location">{user?.timezone}</span>
+    </div>
+  </div>
+  
+  {showDisconnect && (
+    <button className="disconnect-button" onClick={handleDisconnect}>
+      Disconnect
+    </button>
+  )}
+</div>
       </div>
     </nav>
   );

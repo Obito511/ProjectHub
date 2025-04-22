@@ -31,7 +31,7 @@ function Vnavbar() {
           <span>Dashboard</span>
         </li>
 
-        <li className="sidebar-item" onClick={() => navigate("/task")}>
+        <li className="sidebar-item" onClick={() => navigate("/task-board")}>
           <TaskIcon className="icon" />
           <span>Tasks</span>
         </li>

@@ -1,67 +1,77 @@
-/* Unified Page Container */
+/* ProfilePage.css */
 .profile-page-container {
-    display: flex;
-    min-height: calc(100vh - 64px); /* assuming Navbar is 64px tall */
-  }
-  .vnavbar {
-    width: 240px;
-    background-color: #fff;
-    border-right: 1px solid #e5e5e5;
-    position: sticky;
-    top: 64px; /* height of the top Navbar */
-    height: calc(100vh - 64px);
-    padding: 20px 0;
-    overflow-y: auto;
-    z-index: 10;
-  }
+  display: flex;
+  min-height: calc(100vh - 64px);
+  background: #f8fafc;
+}
+
+.vnavbar {
+  width: 240px;
+  background-color: #fff;
+  border-right: 1px solid #e0e0e0;
+  position: sticky;
+  top: 64px;
+  height: calc(100vh - 64px);
+  padding: 1rem 0;
+  overflow-y: auto;
+  z-index: 10;
+}
+
+.profile-content-area {
+  flex: 1;
+  display: grid;
+  grid-template-columns: 1fr 2fr 1fr;
+  gap: 10rem;
+  padding: 1.5rem;
+  max-width: 1440px;
+  margin: 0 auto;
+}
+
+.profile-left,
+.profile-center,
+.profile-right {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+/* Card Consistency */
+.profile-left .card,
+.profile-center .card,
+.profile-right .card {
+  margin-bottom: 0;
+  height: auto;
+}
+
+/* Responsive Breakpoints */
+@media screen and (max-width: 1200px) {
   .profile-content-area {
-    flex: 1;
-    display: flex;
-    gap: 20px;
-    padding: 20px;
+      grid-template-columns: 1fr;
+      padding: 1rem;
   }
   
-  /* Left Profile Card */
-  .profile-left {
-    flex: 1;
-    max-width: 300px;
-  }
-  
-  /* Center Form Section */
-  .profile-center {
-    flex: 2;
-    display: flex;
-    flex-direction: column;
-  }
-  
-  /* Right Project List */
+  .profile-left,
+  .profile-center,
   .profile-right {
-    flex: 1;
-    max-width: 300px;
-  }
-  
-  /* Responsive Breakpoints */
-  @media screen and (max-width: 1024px) {
-    .profile-page-container {
-      flex-direction: column;
-      align-items: center;
-    }
-  
-    .profile-left,
-    .profile-center,
-    .profile-right {
+      max-width: 600px;
       width: 100%;
-      max-width: 100%;
-    }
-  
-    .profile-right {
-      margin-top: 20px;
-    }
+      margin: 0 auto;
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .profile-page-container {
+      flex-direction: column;
   }
   
-  @media screen and (max-width: 480px) {
-    .profile-page-container {
-      padding: 10px;
-    }
+  .vnavbar {
+      width: 100%;
+      position: static;
+      height: auto;
   }
   
+  .profile-content-area {
+      padding: 1rem;
+      gap: 1rem;
+  }
+}
