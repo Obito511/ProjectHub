@@ -12,7 +12,7 @@ import EditProfileForm from './components/EditProfileForm/EditProfileForm';
 import ProjectDashboard from './components/Projects/Projects';
 import Dashboard from './components/Dashboard/Dashboard';
 import TaskForm from './components/createtask/Createtask';
-
+import TaskBoard from './components/TaskBoard/TaskBoard';
 function App() {
   return (
     <Router>

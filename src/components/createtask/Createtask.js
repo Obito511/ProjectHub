@@ -3,6 +3,7 @@ import "./Createtask.css";
 import Vnavbar from '../Vnavbar/Vnavbar';
 import Navbar from "../Navbar/Navbar";
 import { useEffect } from "react";
+import axios from 'axios';
 
 const TaskForm = () => {
   const priorityOptions = ["High", "Medium", "Low"];
@@ -15,7 +16,6 @@ const TaskForm = () => {
     startDate: "",
     endDate: "",
     description: "",
-    assignee: "Yash Ghori",
     priority: ["High"],
     status: ["Pending"],
     project: "" 
@@ -35,52 +35,109 @@ const TaskForm = () => {
   const handleRemove = (value, field) => {
     setTask({ ...task, [field]: task[field].filter(item => item !== value) });
   };
+  const formatDate = (date) => {
+    const d = new Date(date);
+    const year = d.getFullYear();
+    const month = String(d.getMonth() + 1).padStart(2, '0');
+    const day = String(d.getDate()).padStart(2, '0');
+    const hours = String(d.getHours()).padStart(2, '0');
+    const minutes = String(d.getMinutes()).padStart(2, '0');
+    const seconds = String(d.getSeconds()).padStart(2, '0');
+    
+    return `${year}-${month}-${day}T${hours}:${minutes}:${seconds}`;
+  };
 
   const formatClassName = (text) => text.toLowerCase().replace(/\s+/g, '-');
   const handleSubmit = async (e) => {
     e.preventDefault();
-  
+
     try {
-      const response = await fetch("http://localhost:8080/api/tasks/create", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(task),
-      });
-  
-      if (!response.ok) {
-        throw new Error("Failed to create task");
-      }
-  
-      const data = await response.json();
-      console.log("Task created:", data);
-      alert("Task created successfully!");
-  
-      // Reset form if you want
+      const filteredTask = {
+        title: task.title,
+        type: task.type,
+        startDate: formatDate(task.startDate),
+        endDate: formatDate(task.endDate),
+        description: task.description,
+        project: {
+          idprojet: parseInt(task.project)
+        }
+      };
+      
+      console.log("Submitting task:", filteredTask);
+
+      // Send data to API
+      const response = await axios.post(
+        "http://localhost:9090/api/tasks/create",
+        filteredTask,
+        {
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${localStorage.getItem("token").trim()}`
+          },
+        }
+      );
+
+      // Only reset task state, not the projects list
+      console.log("Task created successfully!");
       setTask({
         title: "",
         type: "",
         startDate: "",
         endDate: "",
         description: "",
-        assignee: "Yash Ghori",
-        priority: ["High"],
+        priority: ["High"], // Reset to default values
         status: ["Pending"],
+        project: "" 
       });
+
+      alert("Task created successfully!");
     } catch (error) {
-      console.error("Error:", error);
-      alert("An error occurred while creating the task.");
+      console.error("Error:", error.response || error.message);
+      if (error.response) {
+        console.log("Response data:", error.response.data);
+        alert(`Error ${error.response.status}: ${JSON.stringify(error.response.data)}`);
+      } else if (error.request) {
+        console.log("Request:", error.request);
+        alert("No response received from server. Check your connection.");
+      } else {
+        alert(`Error: ${error.message}`);
+      }
     }
-  };
+};
+
   useEffect(() => {
-    const userId = "123";
+    const fetchProjects = async () => {
+      try {
+        const token = localStorage.getItem("token");
+        const response = await axios.get(
+          `http://localhost:9090/api/projects/owner/${localStorage.userId}`,
+          {
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+        console.log("token: " + localStorage.getItem("token"));
+        setProjects(response.data || []); // Fallback to empty array if response.data is undefined or null
+      } catch (error) {
+        console.error("Error:", error);
+        if (error.response) {
+          console.log("Response data:", error.response.data);
+          console.log("Response status:", error.response.status);
+          alert(`Error ${error.response.status}: ${JSON.stringify(error.response.data)}`);
+        } else if (error.request) {
+          console.log("Request:", error.request);
+          alert("No response received from server. Check your connection.");
+        } else {
+          alert(`Error: ${error.message}`);
+        }
+      }
+    };
   
-    fetch(`http://localhost:8080/api/projects/owner/${userId}`)
-      .then((res) => res.json())
-      .then((data) => setProjects(data))
-      .catch((err) => console.error("Failed to fetch projects:", err));
+    fetchProjects();
   }, []);
+  
   return (
     <div className="div0">
       <Navbar />
@@ -136,9 +193,9 @@ const TaskForm = () => {
                 <label>Project</label>
                 <select name="project" value={task.project} onChange={handleChange}>
                   <option value="">Select a project</option>
-                  {projects.map((proj) => (
-                    <option key={proj.id} value={proj.id}>
-                      {proj.name}
+                  {Array.isArray(projects) && projects.map((proj, index) => (
+                    <option key={proj.idprojet || index} value={proj.idprojet}>
+                      {proj.nom}
                     </option>
                   ))}
                 </select>
@@ -155,7 +212,7 @@ const TaskForm = () => {
               <div className="task-op-row">
                 <div className="select-group">
                   <label>Assignee</label>
-                  <select name="assignee" value={task.assignee} onChange={handleChange}>
+                  <select name="assignee" value="" onChange={handleChange}>
                     <option>Yash Ghori</option>
                   </select>
                 </div>
