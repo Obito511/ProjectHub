@@ -1,58 +1,92 @@
-
-import Login from "../login/Login";
-import { Link } from 'react-router-dom';
-
-import './Vnavbar.css';
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import "./Vnavbar.css";
-
 import DashboardIcon from "@mui/icons-material/Dashboard";
 import TaskIcon from "@mui/icons-material/Task";
-import TaskBoard from "../TaskBoard/TaskBoard";
-import ProjectDashboard from '../Projects/Projects';
-
 import ListAltIcon from "@mui/icons-material/ListAlt";
 import BarChartIcon from "@mui/icons-material/BarChart";
 import SettingsIcon from "@mui/icons-material/Settings";
-
 import PersonIcon from "@mui/icons-material/Person";
 import AddTaskIcon from "@mui/icons-material/AddTask";
 import AddBoxIcon from "@mui/icons-material/AddBox";
+import MenuIcon from "@mui/icons-material/Menu";
+import CloseIcon from "@mui/icons-material/Close";
 
-function Vnavbar() {
+function Vnavbar({ isMobileOpen, setIsMobileOpen }) {
   const navigate = useNavigate();
+  
+  // Close sidebar when navigating on mobile
+  const handleNavigation = (path) => {
+    navigate(path);
+    if (window.innerWidth <= 768) {
+      setIsMobileOpen(false);
+    }
+  };
 
   return (
-    <div className="sidebar">
+    <div className={`sidebar ${isMobileOpen ? 'mobile-open' : ''}`}>
+      <div className="sidebar-header">
+        <div className="sidebar-title">ProjectHub</div>
+        {isMobileOpen && (
+          <button className="close-sidebar" onClick={() => setIsMobileOpen(false)}>
+            <CloseIcon />
+          </button>
+        )}
+      </div>
+      
       <ul className="sidebar-menu">
-        <li className="sidebar-item" onClick={() => navigate("/accueil")}>
+        <li 
+          className="sidebar-item" 
+          onClick={() => handleNavigation("/accueil")}
+        >
           <DashboardIcon className="icon" />
           <span>Dashboard</span>
         </li>
-
-        <li className="sidebar-item" onClick={() => navigate("/task-board")}>
+        
+        <li 
+          className="sidebar-item" 
+          onClick={() => handleNavigation("/task-board")}
+        >
           <TaskIcon className="icon" />
           <span>Tasks</span>
         </li>
         
-        <li className="sidebar-item" onClick={() => navigate("/create-task")}>
+        <li 
+          className="sidebar-item" 
+          onClick={() => handleNavigation("/create-task")}
+        >
           <AddTaskIcon className="icon" />
           <span>Create Task</span>
         </li>
-        <li className="sidebar-item" onClick={() => navigate("/projects")}>
+        
+        <li 
+          className="sidebar-item" 
+          onClick={() => handleNavigation("/projects")}
+        >
           <ListAltIcon className="icon" />
           <span>Projects</span>
         </li>
-        <li className="sidebar-item" onClick={() => navigate("/create-project")}>
+        
+        <li 
+          className="sidebar-item" 
+          onClick={() => handleNavigation("/create-project")}
+        >
           <AddBoxIcon className="icon" />
           <span>Create Project</span>
         </li>
-        <li className="sidebar-item" onClick={() => navigate("/profile")}>
+        
+        <li 
+          className="sidebar-item" 
+          onClick={() => handleNavigation("/profile")}
+        >
           <PersonIcon className="icon" />
           <span>Profile</span>
         </li>
-        <li className="sidebar-item" onClick={() => navigate("/settings")}>
+        
+        <li 
+          className="sidebar-item" 
+          onClick={() => handleNavigation("/settings")}
+        >
           <SettingsIcon className="icon" />
           <span>Settings</span>
         </li>

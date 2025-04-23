@@ -6,35 +6,20 @@
   top: 0;
   z-index: 1000;
   background-color: var(--background-color);
-  padding: 10px 20px;
+  padding: 0 20px;
+  height: 60px;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
-.profile-container {
-  position: relative;
-  cursor: pointer;
-}
 
-.disconnect-button {
-  position: absolute;
-  top: 100%;
-  right: 0;
-  background: white;
-  border: 1px solid #ddd;
-  padding: 8px 16px;
-  border-radius: 4px;
-  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-  z-index: 1000;
-  margin-top: 5px;
-  cursor: pointer;
-  color: #000;
-}
-
-.disconnect-button:hover {
-  background: #f5f5f5;
-}
 .navbar-left {
   display: flex;
   align-items: center;
+}
+
+.logo {
+  font-size: 18px;
+  font-weight: bold;
+  margin-left: 10px;
 }
 
 /* Hamburger Menu */
@@ -44,6 +29,10 @@
   border: none;
   font-size: 24px;
   cursor: pointer;
+  color: #555;
+}
+.menu-toggle:hover {
+  background-color: transparent;
 }
 
 /* Center Section */
@@ -51,6 +40,7 @@
   display: flex;
   justify-content: center;
   flex: 1;
+  padding: 0 20px;
 }
 
 .search-container {
@@ -75,8 +65,10 @@
   outline: none;
   font-size: 16px;
   padding: 5px;
+  width: 100%;
   background: transparent;
 }
+
 .navbar-right {
   display: flex;
   align-items: center;
@@ -86,7 +78,7 @@
   width: 40px;
   height: 40px;
   font-size: 20px;
-  background: white;  /* Ensures background stays white */
+  background: white;
   border: none;
   border-radius: 50%;
   display: flex;
@@ -94,22 +86,39 @@
   justify-content: center;
   color: #555;
   cursor: pointer;
-  margin: 8px;
+  margin: 0 8px;
   padding: 0;
-  
-  transition: background 0.2s ease-in-out;
+  transition: all 0.2s ease-in-out;
 }
 
-.notification-icon:hover,
-.notification-icon:focus {
-  background: white !important;  
-  color: #000;  
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); 
-  outline: none;  
-}
-
-.notification-icon:active {
+.notification-icon:hover {
   background: white !important;
+  color: #000;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.profile-container {
+  position: relative;
+  cursor: pointer;
+}
+
+.disconnect-button {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  background: white;
+  border: 1px solid #ddd;
+  padding: 8px 16px;
+  border-radius: 4px;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  z-index: 1000;
+  margin-top: 5px;
+  cursor: pointer;
+  color: #000;
+}
+
+.disconnect-button:hover {
+  background: #f5f5f5;
 }
 
 .profile {
@@ -122,6 +131,7 @@
   height: 35px;
   border-radius: 50%;
   margin-right: 8px;
+  object-fit: cover;
 }
 
 .profile-info {
@@ -131,6 +141,7 @@
 
 .profile-name {
   font-weight: bold;
+  font-size: 14px;
 }
 
 .profile-location {
@@ -138,3 +149,44 @@
   color: gray;
 }
 
+/* Mobile responsiveness */
+@media (max-width: 768px) {
+  .menu-toggle {
+    display: block;
+  }
+  
+  .navbar-center {
+    display: none;
+  }
+  
+  .profile-info {
+    display: none;
+  }
+  
+  .navbar-right {
+    gap: 5px;
+  }
+  
+  /* Show search in mobile view */
+  .navbar.search-active .navbar-center {
+    display: flex;
+    position: absolute;
+    top: 60px;
+    left: 0;
+    right: 0;
+    padding: 10px;
+    background: var(--background-color);
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  }
+}
+
+/* For medium sized screens */
+@media (min-width: 769px) and (max-width: 1024px) {
+  .profile-location {
+    display: none;
+  }
+  
+  .search-container {
+    max-width: 300px;
+  }
+}

@@ -35,8 +35,7 @@
 
 .div4{
   display: flex;
-  margin-left: -10%;
-  width: 80%;
+  width: 100%;
   background-color: var(--background-color);
 }
 
