@@ -4,7 +4,7 @@
   max-width: 700px;
   margin: 40px auto;
   padding: 40px;
-  background: #f9f9f9;
+  background-color: var(--background-color);
   border-radius: 12px;
   box-shadow: 0 6px 12px rgba(0, 0, 0, 0.08);
 }
@@ -13,6 +13,7 @@
 .task-form {
   display: flex;
   flex-direction: column;
+  background-color: var(--background-color);
   gap: 20px;
 }
 
@@ -36,7 +37,7 @@
   font-size: 14px;
   border: 1px solid #ccc;
   border-radius: 6px;
-  background: #fff;
+  background-color: var(--background-color);
 }
 
 /* Description */
@@ -95,7 +96,7 @@ textarea {
   font-size: 0.85rem;
   margin: 2px;
   height: 15px;
-  background-color: #f0f0f0;
+  background-color: var(--background-color);
 }
 
 .tag button {
@@ -132,7 +133,7 @@ textarea {
 }
 
 .create {
-  background-color: #6e746e;
+  background-color: #0052cc;
   color: white;
 }
 
@@ -141,32 +142,4 @@ textarea {
   color: black;
 }
 
-.div0{
-  display: flex;
-  flex-direction: column;
-  min-height: 100vh;
-}
 
-.div2{
-  display: flex;
-  flex-direction: row;
-  height: 100%;
-
-}
-.div3{
-  width: 30%;
-    display: flex;
-    align-items: flex-start;
-    min-height: 100vh;
-    background-color: white;
-    left: 0;
-    bottom: 0;
-    top: 0;
-    overflow-y: auto;
-}
-
-
-.div4{
-  display: flex;
-  width: 80%;
-}

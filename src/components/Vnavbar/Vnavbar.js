@@ -26,7 +26,7 @@ function Vnavbar() {
   return (
     <div className="sidebar">
       <ul className="sidebar-menu">
-        <li className="sidebar-item" onClick={() => navigate("/dashboard")}>
+        <li className="sidebar-item" onClick={() => navigate("/accueil")}>
           <DashboardIcon className="icon" />
           <span>Dashboard</span>
         </li>
@@ -35,12 +35,7 @@ function Vnavbar() {
           <TaskIcon className="icon" />
           <span>Tasks</span>
         </li>
-        <li className="sidebar-item">
-  <Link to="/tasks">
-    <TaskIcon className="icon" />
-    <span>Tasks</span>
-  </Link>
-</li>
+        
         <li className="sidebar-item" onClick={() => navigate("/create-task")}>
           <AddTaskIcon className="icon" />
           <span>Create Task</span>
