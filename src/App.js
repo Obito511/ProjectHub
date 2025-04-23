@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from "react";
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import './App.css';
 
@@ -13,11 +13,38 @@ import ProjectDashboard from './components/Projects/Projects';
 import Dashboard from './components/Dashboard/Dashboard';
 import TaskForm from './components/createtask/Createtask';
 import TaskBoard from './components/TaskBoard/TaskBoard';
-
+import Settings from './components/Settings/Settings'
 import Projects from './components/Projects/Projects';
 
 function App() {
+  const [isDarkMode, setIsDarkMode] = useState(false);
+
+  useEffect(() => {
+    // Check if there's a saved theme in localStorage
+    const savedTheme = localStorage.getItem("theme");
+    if (savedTheme) {
+      setIsDarkMode(savedTheme === "dark");
+    }
+  }, []);
+
+  useEffect(() => {
+    // Save the theme preference to localStorage
+    localStorage.setItem("theme", isDarkMode ? "dark" : "light");
+
+    // Apply the dark-mode class to the body element
+    if (isDarkMode) {
+      document.body.classList.add("dark-mode");
+    } else {
+      document.body.classList.remove("dark-mode");
+    }
+  }, [isDarkMode]);
+
+  const toggleTheme = () => {
+    setIsDarkMode((prevMode) => !prevMode);
+  };
+
   return (
+    
     <Router>
       <div className="div0">
         <Routes>
@@ -30,7 +57,11 @@ function App() {
           <Route path="/task" element={<Task />} />
           <Route path="/create-project" element={<ProjectForm />} />
           <Route path="/create-task" element={<TaskForm />} />
-          <Route path="/project" element={<Projects />} />
+          <Route path="/projects" element={<Projects />} />
+          <Route 
+  path="/settings" 
+  element={<Settings toggleTheme={toggleTheme} isDarkMode={isDarkMode} />} 
+/>
 
         </Routes>
       </div>

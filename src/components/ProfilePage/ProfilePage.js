@@ -25,23 +25,35 @@ const user = {
 
 const ProfilePage = () => {
     return (
-        <>
-        <Navbar />
-        <div className="profile-page-container">
-          <Vnavbar />
-          <div className="profile-content-area">
-            <div className="profile-left">
-              <ProfileCard />
+        
+      <div className="div0">
+          <Navbar />
+          <div className="div2">
+            <div className="div3"><Vnavbar /></div>
+            
+            <div className="profile-page-container">
+              <div className="profile-content-area">
+                <div className="profile-left">
+                  <ProfileCard />
+                </div>
+                <div className="profile-center">
+                  <EditProfileForm users={user} />
+                </div>
+                <div className="profile-right">
+                  <ProjectsList projects={projects} />
+                </div>
+              </div>
             </div>
-            <div className="profile-center">
-              <EditProfileForm users={user} />
-            </div>
-            <div className="profile-right">
-              <ProjectsList projects={projects} />
-            </div>
+
+
+
+            
           </div>
-        </div>
-      </>
+      </div>
+
+        
+      
+
     );
 };
 

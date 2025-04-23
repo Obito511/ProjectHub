@@ -1,6 +1,6 @@
 .App {
   text-align: center;
-  background-color: #f8f9fa;
+  background-color: var(--background-color);
   
 }
 
@@ -25,7 +25,7 @@
     display: flex;
     align-items: flex-start;
     min-height: 100vh;
-    background-color: white;
+    background-color: var(--background-color);
     left: 0;
     bottom: 0;
     top: 0;
@@ -37,6 +37,7 @@
   display: flex;
   margin-left: -10%;
   width: 80%;
+  background-color: var(--background-color);
 }
 
 .App-header {
@@ -54,3 +55,47 @@
   color: #61dafb;
 }
 
+
+button {
+  background-color: #4CAF50;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+button:hover {
+  background-color: #45a049;
+}
+
+body.light-mode {
+  --background-color: #ffffff;
+  --text-color: #000000;
+  /* Add other variables */
+}
+
+:root {
+  --background-color: #ffffff;
+  --text-color: #000000;
+  --nav-bg: #f8f9fa;
+  /* Add other light theme variables */
+}
+
+/* Dark theme overrides */
+body.dark-mode {
+  --background-color: #1a1a1a;
+  --text-color: #ffffff;
+  --nav-bg: #212529;
+  /* Add other dark theme variables */
+}
+
+body {
+  background-color: var(--background-color);
+  color: var(--text-color);
+  transition: all 0.3s ease;
+}
+
+h1, p {
+  transition: color 0.3s;
+}

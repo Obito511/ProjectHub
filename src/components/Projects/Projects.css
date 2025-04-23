@@ -15,7 +15,7 @@
     display: flex;
     align-items: flex-start;
     min-height: 100vh;
-    background-color: white;
+    background-color: var(--background-color);
     left: 0;
     bottom: 0;
     top: 0;
@@ -30,7 +30,7 @@
 }
 
 .projects-page {
-    background-color: #F0F6FF;
+    background-color: var(--background-color);
     min-height: 100vh;
     padding: 2rem;
     font-family: sans-serif; 
@@ -79,7 +79,7 @@
   }
   
   .project-card {
-    background-color: #ffffff;
+    background-color: var(--background-color);
     border: 1px solid #ddd;
     border-radius: 8px;
     padding: 1.5rem;
@@ -221,4 +221,297 @@
     background-color: #022d5c;
     color: #ffffff;
   }
+  /* Add these styles to your Projects.css file */
+
+/* Popup Overlay */
+.popup-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+/* Popup Container */
+.popup-container {
+  background-color: var(--background-color);
+  border-radius: 8px;
+  width: 100%;
+  max-width: 450px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  display: flex;
+  flex-direction: column;
+}
+
+/* Popup Header */
+.popup-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 24px;
+  border-bottom: 1px solid #e1e4e8;
+}
+
+.popup-header h2 {
+  margin: 0;
+  font-size: 18px;
+  color: #172b4d;
+}
+
+.close-button {
+  background: transparent;
+  width: 10px;
+  border: none;
+  cursor: pointer;
+  color: #6b778c;
+}
+
+/* Popup Content */
+.popup-content {
+  padding: 24px;
+}
+
+.form-group {
+  margin-bottom: 16px;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: 500;
+  color: #172b4d;
+}
+
+.required {
+  color: #de350b;
+}
+
+.form-control {
+  width: 100%;
+  padding: 8px 12px;
+  border: 1px solid #dfe1e6;
+  border-radius: 3px;
+  font-size: 14px;
+}
+
+select.form-control {
+  height: 40px;
+  background-color: white;
+}
+
+.or-divider {
+  text-align: center;
+  margin: 16px 0;
+  position: relative;
+}
+
+.or-divider:before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background-color: #dfe1e6;
+  z-index: 1;
+}
+
+.or-divider span {
+  background-color: white;
+  padding: 0 12px;
+  position: relative;
+  z-index: 2;
+  color: #6b778c;
+  font-size: 14px;
+}
+
+.service-buttons {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 16px;
   
+}
+
+.service-button {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px;
+  border: 1px solid #dfe1e6;
+  border-radius: 3px;
+  background-color: white;
+  cursor: pointer;
+  font-size: 14px;
+  gap: 8px;
+  color: black;
+}
+
+.service-button:hover {
+  background-color: #f4f5f7;
+}
+
+.recaptcha-notice {
+  font-size: 12px;
+  color: #6b778c;
+  margin-top: 16px;
+}
+
+.policy-link {
+  color: #0052cc;
+  text-decoration: none;
+  margin: 0 4px;
+}
+
+.popup-footer {
+  display: flex;
+  justify-content: flex-end;
+  padding: 16px 24px;
+  border-top: 1px solid #e1e4e6;
+  gap: 8px;
+}
+
+.cancel-button {
+  background: none;
+  border: none;
+  color: #42526e;
+  cursor: pointer;
+  padding: 8px 12px;
+  font-weight: 500;
+}
+
+.add-button {
+  background-color: #0052cc;
+  color: white;
+  border: none;
+  border-radius: 3px;
+  padding: 8px 16px;
+  cursor: pointer;
+  font-weight: 500;
+}
+
+.add-button:hover {
+  background-color: #0747a6;
+}
+.close-button:hover{
+  background-color:transparent;
+}
+.search-input-container {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  padding: 2px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  background-color: var(--background-color);
+}
+
+.search-input {
+  flex: 1;
+  border: none !important;
+  padding: 8px !important;
+  margin: 0 !important;
+  min-width: 100px;
+  outline: none;
+  box-shadow: none !important;
+}
+
+.search-input:focus {
+  outline: none;
+  box-shadow: none !important;
+}
+
+.selected-user-tag {
+  display: flex;
+  align-items: center;
+  background-color: var(--background-color);
+  border-radius: 16px;
+  padding: 2px 8px 2px 2px;
+  margin: 4px;
+  font-size: 14px;
+}
+
+.selected-user-avatar {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  margin-right: 6px;
+}
+
+.remove-user-btn {
+  background: none;
+  border: none;
+  color: #666;
+  cursor: pointer;
+  font-size: 16px;
+  padding: 0 0 0 6px;
+  margin-left: 4px;
+}
+
+.suggestions-container {
+  position: relative;
+  margin-top: 2px;
+  z-index: 10;
+}
+
+.suggestions-list {
+  position: absolute;
+  width: 100%;
+  max-height: 200px;
+  overflow-y: auto;
+  background-color: var(--background-color);
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.suggestion-item {
+  display: flex;
+  align-items: center;
+  padding: 10px;
+  border-bottom: 1px solid #f0f0f0;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.suggestion-item:last-child {
+  border-bottom: none;
+}
+
+.suggestion-item:hover {
+  background-color: #f7f9ff;
+}
+
+.suggestion-avatar img {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.suggestion-info {
+  margin-left: 12px;
+  flex: 1;
+}
+
+.suggestion-name {
+  font-weight: 500;
+  font-size: 14px;
+  color: #333;
+}
+
+.suggestion-email {
+  font-size: 12px;
+  color: #666;
+}
+.remove-user-btn:hover{
+  background-color: transparent;
+}

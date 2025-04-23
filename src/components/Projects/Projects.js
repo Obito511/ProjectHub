@@ -3,13 +3,155 @@ import Vnavbar from '../Vnavbar/Vnavbar';
 import "./Projects.css";
 import Navbar from "../Navbar/Navbar";
 import axios from "axios";
-
+import AddIcon from "@mui/icons-material/Add";
+import FileUploadIcon from "@mui/icons-material/FileUpload";
 import HourglassTopIcon from '@mui/icons-material/HourglassTop';
 import ErrorOutlineIcon from '@mui/icons-material/ErrorOutline';
 import EditNoteOutlinedIcon from '@mui/icons-material/EditNoteOutlined';
+import CloseIcon from '@mui/icons-material/Close';
+import GoogleIcon from '@mui/icons-material/Google';
+import MicrosoftIcon from '@mui/icons-material/Microsoft';
+import LinkedInIcon from '@mui/icons-material/LinkedIn';
 import { useNavigate } from "react-router-dom";
 
+const AddMemberPopup = ({ isOpen, onClose, projectName }) => {
+  const [query, setQuery] = useState("");
+  const [suggestions, setSuggestions] = useState([]);
+  const [selectedUsers, setSelectedUsers] = useState([]);
 
+  useEffect(() => {
+    if (query.length > 1) {
+      const delayDebounceFn = setTimeout(() => {
+        axios
+          .get('http://localhost:9090/api/user/search?keyword=' + query, {
+            headers: {
+              "Content-Type": "application/json",
+              "Authorization": "Bearer " + localStorage.getItem("token"),
+            },
+          })
+          .then((res) => {
+            console.log(res.data);
+            setSuggestions(Array.isArray(res.data) ? res.data : []);
+          })
+          .catch(error => {
+            console.error("Error fetching suggestions:", error);
+            setSuggestions([]);  // In case of error, reset the suggestions to empty array
+          });
+      }, 300);
+      
+      return () => clearTimeout(delayDebounceFn);
+    } else {
+      setSuggestions([]);
+    }
+  }, [query]);
+
+  const handleSelectUser = (user) => {
+    setSelectedUsers([...selectedUsers, user]);
+    setSuggestions([]);
+    setQuery("");
+  };
+
+  const handleRemoveUser = (userId) => {
+    setSelectedUsers(selectedUsers.filter(user => user.id !== userId));
+  };
+
+  if (!isOpen) return null;
+
+  return (
+    <div className="popup-overlay">
+      <div className="popup-container">
+        <div className="popup-header">
+          <h2>Add people to {projectName}</h2>
+          <button className="close-button" onClick={onClose}>
+            <CloseIcon />
+          </button>
+        </div>
+        
+        <div className="popup-content">
+          <div className="form-group">
+            <label>Names or emails <span className="required">*</span></label>
+            <div className="search-input-container">
+              {selectedUsers.map(user => (
+                <div key={user.id} className="selected-user-tag">
+                  <img src={user.avatar || "https://i.pravatar.cc/32?img=1"} alt="" className="selected-user-avatar" />
+                  <span>{user.name}</span>
+                  <button onClick={() => handleRemoveUser(user.id)} className="remove-user-btn">×</button>
+                </div>
+              ))}
+              <input
+                type="text"
+                value={query}
+                onChange={(e) => setQuery(e.target.value)}
+                placeholder={selectedUsers.length > 0 ? "" : "e.g., aziz, jallali@gmail.com"}
+                className="form-control search-input"
+              />
+            </div>
+            
+            {Array.isArray(suggestions) && suggestions.length > 0 && (
+              <div className="suggestions-container">
+                <ul className="suggestions-list">
+                  {suggestions.map((user, index) => (
+                    <li 
+                      key={index} 
+                      className="suggestion-item"
+                      onClick={() => handleSelectUser(user)}
+                    >
+                      <div className="suggestion-avatar">
+                        <img src={user.avatar || "https://i.pravatar.cc/32?img=1"} alt="avatar" />
+                      </div>
+                      <div className="suggestion-info">
+                        <div className="suggestion-name">{user.name}</div>
+                        <div className="suggestion-email">{user.email}</div>
+                      </div>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
+          </div>
+          
+          <div className="or-divider">
+            <span>or add from</span>
+          </div>
+          
+          <div className="service-buttons">
+            <button className="service-button">
+              <GoogleIcon className="icon" /> Google
+            </button>
+            <button className="service-button">
+              <LinkedInIcon className="icon" /> LinkedIn
+            </button>
+            <button className="service-button">
+              <MicrosoftIcon className="icon" /> Microsoft
+            </button>
+          </div>
+          
+          <div className="form-group">
+            <label>Role</label>
+            <select className="form-control">
+              <option>Member</option>
+              <option>Admin</option>
+              <option>Viewer</option>
+            </select>
+          </div>
+          
+          <div className="recaptcha-notice">
+            <small>
+              This site is protected by reCAPTCHA and the Google 
+              <a href="#" className="policy-link">Privacy Policy</a> and 
+              <a href="#" className="policy-link">Terms of Service</a> apply.
+            </small>
+          </div>
+        </div>
+        
+        <div className="popup-footer">
+          <button className="cancel-button" onClick={onClose}>Cancel</button>
+          <button className="add-button" disabled={selectedUsers.length === 0}>Add</button>
+        </div>
+      </div>
+    </div>
+  );
+};
 export default function ProjectDashboard() {
   const [projects, setProjects] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -18,6 +160,9 @@ export default function ProjectDashboard() {
 
   const itemsPerPage = 6;
   const [currentPage, setCurrentPage] = useState(1);
+  const [isAddMemberPopupOpen, setIsAddMemberPopupOpen] = useState(false);
+  const [currentProjectName, setCurrentProjectName] = useState("");
+
   const totalPages = Math.ceil(projects.length / itemsPerPage);
 
   useEffect(() => {
@@ -55,6 +200,14 @@ export default function ProjectDashboard() {
     }
   };
   
+  const openAddMemberPopup = (projectName) => {
+    setCurrentProjectName(projectName);
+    setIsAddMemberPopupOpen(true);
+  };
+
+  const closeAddMemberPopup = () => {
+    setIsAddMemberPopupOpen(false);
+  };
 
   return (
     <>
@@ -65,7 +218,7 @@ export default function ProjectDashboard() {
         <div className="projects-page">
           <div className="projects-header">
             <h1>Projects</h1>
-            <button className="create-button"onClick={() => navigate("/create-project")}>Create</button>
+            <button className="create-button" onClick={() => navigate("/create-project")}>Create</button>
           </div>
 
           {loading ? (
@@ -94,10 +247,16 @@ export default function ProjectDashboard() {
                       <HourglassTopIcon className="icon" /> {project.createdDate || "Unknown date"}
                     </div>
                     <div className="project-card-footer">
-                      <div className="avatars">
-                        <img src={`https://i.pravatar.cc/32?img=1`} alt="avatar1" />
-                        <img src={`https://i.pravatar.cc/32?img=2`} alt="avatar2" />
-                        <img src={`https://i.pravatar.cc/32?img=3`} alt="avatar3" />
+                      <div className="task-members">
+                        <button 
+                          className="add-member"
+                          onClick={() => openAddMemberPopup(project.nom)}
+                        >
+                          <AddIcon className="icon" />
+                        </button>
+                        <img src={`https://i.pravatar.cc/32?img=1`} alt="avatar1" className="avatar" />
+                        <img src={`https://i.pravatar.cc/32?img=2`} alt="avatar2" className="avatar" />
+                        <img src={`https://i.pravatar.cc/32?img=3`} alt="avatar3" className="avatar" />
                       </div>
                       <div className="project-issues">
                         <ErrorOutlineIcon className="icon" /> {project.issues || 0} Issues
@@ -138,6 +297,13 @@ export default function ProjectDashboard() {
           )}
         </div>
       </div>
+
+      {/* Add Member Popup */}
+      <AddMemberPopup 
+        isOpen={isAddMemberPopupOpen}
+        onClose={closeAddMemberPopup}
+        projectName={currentProjectName}
+      />
     </>
   );
 }

@@ -55,32 +55,23 @@ const EditProfileForm = () => {
               className="form-input"
               placeholder="Enter first name"
             />
-          </div>
-
-          <div className="form-group">
-            <label>Last Name</label>
-            <input
-              type="text"
-              name="lastName"
-              value={user.lastName}
-              onChange={handleChange}
-              className="form-input"
-              placeholder="Enter last name"
-            />
-          </div>
+          </div> 
         </div>
+        <div className="form-row">
+            <div className="form-group">
+              <label>Last Name</label>
+              <input
+                type="text"
+                name="lastName"
+                value={user.lastName}
+                onChange={handleChange}
+                className="form-input"
+                placeholder="Enter last name"
+              />
+            </div>
+          </div>
 
         <div className="form-row">
-          <div className="form-group">
-            <label>Email (read-only)</label>
-            <input
-              type="email"
-              name="email"
-              value={user.email}
-              readOnly
-              className="form-input"
-            />
-          </div>
 
           <div className="form-group">
             <label>Password (not editable)</label>
