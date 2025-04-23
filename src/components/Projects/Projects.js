@@ -14,7 +14,7 @@ import MicrosoftIcon from '@mui/icons-material/Microsoft';
 import LinkedInIcon from '@mui/icons-material/LinkedIn';
 import { useNavigate } from "react-router-dom";
 
-const AddMemberPopup = ({ isOpen, onClose, projectName }) => {
+const AddMemberPopup = ({ isOpen, onClose, projectName, projectId, onMembersAdded }) => {
   const [query, setQuery] = useState("");
   const [suggestions, setSuggestions] = useState([]);
   const [selectedUsers, setSelectedUsers] = useState([]);
@@ -53,6 +53,44 @@ const AddMemberPopup = ({ isOpen, onClose, projectName }) => {
 
   const handleRemoveUser = (userId) => {
     setSelectedUsers(selectedUsers.filter(user => user.id !== userId));
+  };
+
+  const handleAddMembers = async () => {
+    if (selectedUsers.length === 0) return;
+    
+    try {
+      const role = document.querySelector('select.form-control').value || 'Member';
+      
+      const addRequests = selectedUsers.map(user => {
+        return axios.post(
+          
+          `http://localhost:9090/api/projects/${projectId}/members`,
+          null,
+          {
+            headers: {
+              "Content-Type": "application/json",
+              "Authorization": "Bearer " + localStorage.getItem("token"),
+            },
+            params: {
+              userId: user.id,
+              role: role
+            }
+          }
+        );
+      });
+      
+      await Promise.all(addRequests);
+      
+      // Show success message or refresh project data
+      onClose();
+      // Call the callback to refresh the project data
+      if (onMembersAdded) {
+        onMembersAdded();
+      }
+    } catch (error) {
+      console.error("Error adding members:", error);
+      // Show error message to user
+    }
   };
 
   if (!isOpen) return null;
@@ -146,7 +184,7 @@ const AddMemberPopup = ({ isOpen, onClose, projectName }) => {
         
         <div className="popup-footer">
           <button className="cancel-button" onClick={onClose}>Cancel</button>
-          <button className="add-button" disabled={selectedUsers.length === 0}>Add</button>
+          <button className="add-button" disabled={selectedUsers.length === 0} onClick={handleAddMembers}>Add</button>
         </div>
       </div>
     </div>
@@ -162,32 +200,34 @@ export default function ProjectDashboard() {
   const [currentPage, setCurrentPage] = useState(1);
   const [isAddMemberPopupOpen, setIsAddMemberPopupOpen] = useState(false);
   const [currentProjectName, setCurrentProjectName] = useState("");
+  const [currentProjectId, setCurrentProjectId] = useState(null);
 
   const totalPages = Math.ceil(projects.length / itemsPerPage);
 
+  const fetchProjects = async () => {
+    try {
+      setLoading(true);
+      const userId = localStorage.getItem("userId");
+      const token = localStorage.getItem("token");
+
+      const response = await axios.get(
+        `http://localhost:9090/api/projects/owner/${userId}`,
+        {
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": "Bearer " + localStorage.getItem("token"),
+          },
+        }
+      );
+      setProjects(response.data);
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   useEffect(() => {
-    const fetchProjects = async () => {
-      try {
-        const userId = localStorage.getItem("userId");
-        const token = localStorage.getItem("token");
-
-        const response = await axios.get(
-          `http://localhost:9090/api/projects/owner/${userId}`,
-          {
-            headers: {
-              "Content-Type": "application/json",
-              "Authorization": "Bearer " + localStorage.getItem("token"),
-            },
-          }
-        );
-        setProjects(response.data);
-      } catch (err) {
-        setError(err.message);
-      } finally {
-        setLoading(false);
-      }
-    };
-
     fetchProjects();
   }, []);
 
@@ -200,8 +240,9 @@ export default function ProjectDashboard() {
     }
   };
   
-  const openAddMemberPopup = (projectName) => {
+  const openAddMemberPopup = (projectName, projectId) => {
     setCurrentProjectName(projectName);
+    setCurrentProjectId(projectId);
     setIsAddMemberPopupOpen(true);
   };
 
@@ -210,11 +251,12 @@ export default function ProjectDashboard() {
   };
 
   return (
-    <>
+    
+    <div className="div0">
       <Navbar />
-      <div className="main-layout">
-        <Vnavbar />
-
+      <div className="div2">
+        <div className="div3"><Vnavbar /></div>
+        <div className="div4">
         <div className="projects-page">
           <div className="projects-header">
             <h1>Projects</h1>
@@ -250,10 +292,11 @@ export default function ProjectDashboard() {
                       <div className="task-members">
                         <button 
                           className="add-member"
-                          onClick={() => openAddMemberPopup(project.nom)}
+                          onClick={() => openAddMemberPopup(project.nom, project.idprojet)}
                         >
                           <AddIcon className="icon" />
                         </button>
+                        
                         <img src={`https://i.pravatar.cc/32?img=1`} alt="avatar1" className="avatar" />
                         <img src={`https://i.pravatar.cc/32?img=2`} alt="avatar2" className="avatar" />
                         <img src={`https://i.pravatar.cc/32?img=3`} alt="avatar3" className="avatar" />
@@ -303,7 +346,14 @@ export default function ProjectDashboard() {
         isOpen={isAddMemberPopupOpen}
         onClose={closeAddMemberPopup}
         projectName={currentProjectName}
+        projectId={currentProjectId}
+        onMembersAdded={fetchProjects}
       />
-    </>
+    
+        </div>
+      </div>
+    
+
+        
   );
 }
