@@ -21,7 +21,7 @@
 }
 
 .div3 {
-  width: 20%; /* Fixed width for sidebar, matching the screenshot */
+  width: 30%; /* Fixed width for sidebar, matching the screenshot */
   display: flex;
   flex-direction: column; /* Vertical content stacking */
   align-items: flex-start; /* Align items to the start */
