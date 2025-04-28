@@ -1,61 +1,139 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { DragDropContext, Droppable, Draggable } from "@hello-pangea/dnd";
 import "./TaskBoard.css";
 import AddIcon from "@mui/icons-material/Add";
 import FileUploadIcon from "@mui/icons-material/FileUpload";
 import CommentIcon from "@mui/icons-material/Comment";
 import SearchIcon from "@mui/icons-material/Search";
-import Vnavbar from '../Vnavbar/Vnavbar';
-import Navbar from '../Navbar/Navbar';
+import Vnavbar from "../Vnavbar/Vnavbar";
+import Navbar from "../Navbar/Navbar";
+import { useParams } from "react-router-dom";
+import axios from "axios";
+import AssignMembersPopup from "../AssignMembersPopup/AssignMembersPopup";
+
 const TaskBoard = () => {
-    const [view, setView] = useState("List View");
+  const { projectId } = useParams();
+  const [view, setView] = useState("Grid View");
+  const [projectName, setProjectName] = useState("");
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [isAssignMembersOpen, setIsAssignMembersOpen] = useState(false);
+  const [currentTaskId, setCurrentTaskId] = useState(null);
 
   const [columns, setColumns] = useState({
-    backlog: [
-      {
-        id: "1",
-        title: "Food Research",
-        description:
-          "Food design is required for our new project. Let's research the best practices.",
-        days: 12,
-        comments: 5,
-        attachments: 8,
-        users: ["A", "B", "C", "D"],
-      },
-      {
-        id: "2",
-        title: "Mockups",
-        description: "Create a 1:2 mockups for mobile iPhone 13 pro max.",
-        days: 12,
-        comments: 3,
-        attachments: 5,
-        users: ["E", "F", "G"],
-      },
-    ],
-    inProgress: [
-      {
-        id: "3",
-        title: "User Interface",
-        description: "Design new user interface design for food delivery app.",
-        days: 12,
-        comments: 2,
-        attachments: 4,
-        users: ["K", "L", "M", "N"],
-      },
-    ],
-    completed: [
-      {
-        id: "4",
-        title: "Mind Mapping",
-        description:
-          "Mind mapping for the food delivery app for targeting young users.",
-        days: 12,
-        comments: 7,
-        attachments: 2,
-        users: ["V", "W"],
-      },
-    ],
+    backlog: [],
+    inProgress: [],
+    completed: [],
   });
+
+  // Helper function to format task data from API
+  const formatTask = (task) => {
+    return {
+      id: task.id.toString(),
+      title: task.title || "Untitled Task",
+      description: task.description || "No description",
+      days: calculateRemainingDays(task.endDate),
+      comments: task.comments?.length || 0,
+      attachments: task.attachments?.length || 0,
+      users: task.assignees?.map(user => user.id) || []
+    };
+  };
+
+  // Calculate remaining days
+  const calculateRemainingDays = (endDate) => {
+    if (!endDate) return 0;
+    
+    const end = new Date(endDate);
+    const today = new Date();
+    const diffTime = end - today;
+    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+    return diffDays > 0 ? diffDays : 0;
+  };
+
+  // Fetch project and tasks
+  useEffect(() => {
+    if (!projectId) return;
+    
+    const fetchProjectData = async () => {
+      try {
+        setLoading(true);
+        
+        // Fetch project details
+        const projectResponse = await axios.get(
+          `http://localhost:9090/api/projects/${projectId}`,
+          {
+            headers: {
+              "Content-Type": "application/json",
+              "Authorization": "Bearer " + localStorage.getItem("token"),
+            },
+          }
+        );
+        
+        setProjectName(projectResponse.data.nom || "Project Tasks");
+        
+        // Fetch tasks for this project
+        const tasksResponse = await axios.get(
+          `http://localhost:9090/api/tasks/project/${projectId}`,
+          {
+            headers: {
+              "Content-Type": "application/json",
+              "Authorization": "Bearer " + localStorage.getItem("token"),
+            },
+          }
+        );
+        console.log(tasksResponse.data)
+        
+        // Organize tasks by status
+        const tasksByStatus = {
+          backlog: [],
+          inProgress: [],
+          completed: []
+        };
+        
+        if (Array.isArray(tasksResponse.data)) {
+          tasksResponse.data.forEach(task => {
+            const status = task.status?.name?.toLowerCase() || "backlog";
+            
+            if (status === "completed" || status === "done") {
+              tasksByStatus.completed.push(formatTask(task));
+            } else if (status === "in progress" || status === "inprogress" || status === "in-progress") {
+              tasksByStatus.inProgress.push(formatTask(task));
+            } else {
+              tasksByStatus.backlog.push(formatTask(task));
+            }
+          });
+        }
+        
+        setColumns(tasksByStatus);
+        setError(null);
+        
+      } catch (err) {
+        console.error("Error fetching project data:", err);
+        setError("Failed to load project tasks");
+        
+        // Set default data if API fails
+        setColumns({
+          backlog: [
+            {
+              id: "1",
+              title: "Example Task",
+              description: "This is an example task.",
+              days: 5,
+              comments: 0,
+              attachments: 0,
+              users: ["A"]
+            }
+          ],
+          inProgress: [],
+          completed: []
+        });
+      } finally {
+        setLoading(false);
+      }
+    };
+    
+    fetchProjectData();
+  }, [projectId]);
 
   const onDragEnd = (result) => {
     if (!result.destination) return;
@@ -66,118 +144,274 @@ const TaskBoard = () => {
 
     const updatedColumns = { ...columns };
 
-    const [movedTask] = updatedColumns[sourceColumnId].splice(source.index, 1);
-
-    updatedColumns[destColumnId].splice(destination.index, 0, movedTask);
+    if (sourceColumnId === destColumnId) {
+      // Reorder within the same column/section
+      const column = updatedColumns[sourceColumnId];
+      const [movedTask] = column.splice(source.index, 1);
+      column.splice(destination.index, 0, movedTask);
+    } else {
+      // Move to a different column/section
+      const sourceColumn = updatedColumns[sourceColumnId];
+      const destColumn = updatedColumns[destColumnId];
+      const [movedTask] = sourceColumn.splice(source.index, 1);
+      destColumn.splice(destination.index, 0, movedTask);
+      
+      // Here you would update the task status in the backend
+      updateTaskStatus(movedTask.id, destColumnId);
+    }
 
     setColumns(updatedColumns);
   };
+  
+  // Function to update task status in the backend
+  const updateTaskStatus = async (taskId, newStatus) => {
+    try {
+      // Map the column ID to a status ID
+      let statusId;
+      switch(newStatus) {
+        case 'inProgress':
+          statusId = 2; // Assuming 2 is the ID for "In Progress"
+          break;
+        case 'completed':
+          statusId = 3; // Assuming 3 is the ID for "Completed"
+          break;
+        default:
+          statusId = 1; // Assuming 1 is the ID for "Backlog"
+      }
+      
+      await axios.put(
+        `http://localhost:9090/api/tasks/${taskId}`,
+        {}, // Empty body since we're just updating status via query param
+        {
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": "Bearer " + localStorage.getItem("token"),
+          },
+          params: {
+            statusId: statusId
+          }
+        }
+      );
+    } catch (error) {
+      console.error("Error updating task status:", error);
+    }
+  };
+
+  // Add this function to handle opening the assign members popup
+  const handleOpenAssignMembers = (taskId) => {
+    setCurrentTaskId(taskId);
+    setIsAssignMembersOpen(true);
+  };
+
+  // Add this function to handle member assignment
+  const handleMemberAssigned = async (memberId) => {
+    try {
+      // Refresh the task data to show the new assignee
+      const tasksResponse = await axios.get(
+        `http://localhost:9090/api/tasks/project/${projectId}`,
+        {
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": "Bearer " + localStorage.getItem("token"),
+          },
+        }
+      );
+      
+      // Update the state with refreshed data
+      const tasksByStatus = {
+        backlog: [],
+        inProgress: [],
+        completed: []
+      };
+      
+      if (Array.isArray(tasksResponse.data)) {
+        tasksResponse.data.forEach(task => {
+          const status = task.status?.name?.toLowerCase() || "backlog";
+          
+          if (status === "completed" || status === "done") {
+            tasksByStatus.completed.push(formatTask(task));
+          } else if (status === "in progress" || status === "inprogress" || status === "in-progress") {
+            tasksByStatus.inProgress.push(formatTask(task));
+          } else {
+            tasksByStatus.backlog.push(formatTask(task));
+          }
+        });
+      }
+      
+      setColumns(tasksByStatus);
+      
+    } catch (error) {
+      console.error("Error refreshing tasks:", error);
+    }
+  };
+
+  const renderTaskCard = (task, index) => (
+    <Draggable key={task.id} draggableId={task.id} index={index}>
+      {(provided) => (
+        <div
+          className="task-card"
+          ref={provided.innerRef}
+          {...provided.draggableProps}
+          {...provided.dragHandleProps}
+        >
+          <div className="drag-handle">
+            <h4>{task.title}</h4>
+            <span>{task.days} Days</span>
+          </div>
+          <p className="disc">{task.description}</p>
+          <div className="task-info">
+            <span>
+              <CommentIcon className="icon" /> {task.comments}
+            </span>
+            <span>
+              <FileUploadIcon className="icon" /> {task.attachments}
+            </span>
+            <div className="task-members">
+              <button 
+                className="add-member"
+                onClick={(e) => {
+                  e.stopPropagation(); // Prevent dragging when clicking
+                  handleOpenAssignMembers(task.id);
+                }}
+              >
+                <AddIcon className="icon" />
+              </button>
+              {task.users.map((user, idx) => (
+                <img
+                  key={idx}
+                  src={`https://i.pravatar.cc/32?img=${idx + 1}`}
+                  alt={`User ${idx}`}
+                  className="avatar"
+                />
+              ))}
+            </div>
+          </div>
+        </div>
+      )}
+    </Draggable>
+  );
 
   return (
     <div className="App">
-      <div className='div0'>
-           <Navbar />
-          
-        <div className='div2'>
-            <div className='div3'><Vnavbar/></div>
-            <div className='div4'>
-            <DragDropContext onDragEnd={onDragEnd}>
-      <div className="task-board">
-        <h2>Tasks</h2>
-        <div className="tasks">
-          <h3>Overview</h3>
-          <p className="dashboard-subtitle">Edit or modify all cards as you want</p>
-          <div className="dashboard-controls">
-               
-                <div className="search">
-                    <SearchIcon className="search-icon" />
-                    <input type="text" placeholder="Search Projects" className="search-input1" />
-                </div>
-
-            <select
-            className="view-selector"
-            value={view}
-            onChange={(e) => setView(e.target.value)}
-            >
-            <option>List View</option>
-            <option>Grid View</option>
-            </select>
+      <div className="div0">
+        <Navbar />
+        <div className="div2">
+          <div className="div3">
+            <Vnavbar />
           </div>
-          <hr></hr>
-          <div className="columns">
-            {Object.entries(columns).map(([columnId, tasks]) => (
-              <Droppable key={columnId} droppableId={columnId}>
-                {(provided) => (
-                  <div
-                    className="column"
-                    ref={provided.innerRef}
-                    {...provided.droppableProps}
-                  >
-                    <div className="title">
-                      <h3>{columnId.replace(/([A-Z])/g, " $1")}</h3>
-                    </div>
-                    <button className="add-btn"><AddIcon className="icon" /></button>
-                    <div className="task-list">
-                      {tasks.map((task, index) => (
-                        <Draggable
-                          key={task.id}
-                          draggableId={task.id}
-                          index={index}
+          <div className="div4">
+            <DragDropContext onDragEnd={onDragEnd}>
+              <div className="task-board">
+                <h2>{projectName} - Tasks</h2>
+                <div className="tasks">
+                  {loading ? (
+                    <div className="loading-message">Loading tasks...</div>
+                  ) : error ? (
+                    <div className="error-message">{error}</div>
+                  ) : (
+                    <>
+                      <h3>Overview</h3>
+                      <p className="dashboard-subtitle">
+                        Edit or modify all cards as you want
+                      </p>
+                      <div className="dashboard-controls">
+                        <div className="search">
+                          <SearchIcon className="search-icon" />
+                          <input
+                            type="text"
+                            placeholder="Search Tasks"
+                            className="search-input1"
+                          />
+                        </div>
+                        <select
+                          className="view-selector"
+                          value={view}
+                          onChange={(e) => setView(e.target.value)}
                         >
-                          {(provided) => (
-                            <div
-                              className="task-card"
-                              ref={provided.innerRef}
-                              {...provided.draggableProps}
-                              {...provided.dragHandleProps}
-                            >
-                              <div className="drag-handle">
-                                <h4>{task.title}</h4>
-                                <span>{task.days} Days</span>
-                              </div>
-                              <p className="disc">{task.description}</p>
-                              <div className="task-info">
-                                <span>
-                                  <CommentIcon className="icon" /> {task.comments}
-                                </span>
-                                <span>
-                                  <FileUploadIcon className="icon" /> {task.attachments}
-                                </span>
-                                <div className="task-members">
-                                  <button className="add-member">
+                          <option>List View</option>
+                          <option>Grid View</option>
+                        </select>
+                      </div>
+                      <hr />
+                      {view === "Grid View" ? (
+                        <div className="columns">
+                          {Object.entries(columns).map(([columnId, tasks]) => (
+                            <Droppable key={columnId} droppableId={columnId}>
+                              {(provided) => (
+                                <div
+                                  className="column"
+                                  ref={provided.innerRef}
+                                  {...provided.droppableProps}
+                                >
+                                  <div className="title">
+                                    <h3>{columnId.replace(/([A-Z])/g, " $1")}</h3>
+                                    <span className="task-count">{tasks.length}</span>
+                                  </div>
+                                  <button className="add-btn">
                                     <AddIcon className="icon" />
                                   </button>
-                                  {task.users.map((user, idx) => (
-                                    <img
-                                      key={idx}
-                                      src={`https://i.pravatar.cc/32?img=${idx + 1}`}
-                                      alt={`User ${idx}`}
-                                      className="avatar"
-                                    />
-                                  ))}
+                                  <div className="task-list">
+                                    {tasks.map((task, index) =>
+                                      renderTaskCard(task, index)
+                                    )}
+                                    {provided.placeholder}
+                                  </div>
                                 </div>
-                              </div>
-                            </div>
-                          )}
-                        </Draggable>
-                      ))}
-                      {provided.placeholder}
-                    </div>
-                  </div>
-                )}
-              </Droppable>
-            ))}
+                              )}
+                            </Droppable>
+                          ))}
+                        </div>
+                      ) : (
+                        <div className="list-view">
+                          {Object.entries(columns).map(([columnId, tasks]) => (
+                            <Droppable key={columnId} droppableId={columnId}>
+                              {(provided) => (
+                                <div
+                                  className="list-section"
+                                  ref={provided.innerRef}
+                                  {...provided.droppableProps}
+                                >
+                                  <div className="title">
+                                    <h3>{columnId.replace(/([A-Z])/g, " $1")}</h3>
+                                    <span className="task-count">{tasks.length}</span>
+                                  </div>
+                                  <button className="add-btn">
+                                    <AddIcon className="icon" />
+                                  </button>
+                                  <div className="task-list">
+                                    {tasks.map((task, index) =>
+                                      renderTaskCard(task, index)
+                                    )}
+                                    {provided.placeholder}
+                                  </div>
+                                </div>
+                              )}
+                            </Droppable>
+                          ))}
+                        </div>
+                      )}
+                    </>
+                  )}
+                </div>
+              </div>
+            </DragDropContext>
           </div>
         </div>
       </div>
-    </DragDropContext>
-  );
-            </div>
-        </div>
-      </div>
+      
+      {/* Render the AssignMembersPopup component here */}
+      {isAssignMembersOpen && (
+        <AssignMembersPopup
+          isOpen={isAssignMembersOpen}
+          onClose={() => setIsAssignMembersOpen(false)}
+          projectName={projectName}
+          projectId={projectId}
+          taskId={currentTaskId}
+          onMemberAssigned={handleMemberAssigned}
+        />
+      )}
     </div>
   );
-    
 };
 
 export default TaskBoard;

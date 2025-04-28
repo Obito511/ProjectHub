@@ -42,10 +42,13 @@ const ProjectForm = () => {
   };
 
   return (
-    <>
-      <Navbar />
-      <div className="main-layout">
-        <Vnavbar />
+    
+  
+   <div className="div0">
+    <Navbar />
+    <div className="div2">
+        <div className="div3"><Vnavbar /></div>
+        <div className="div4">
         <div className="page-container">
           <h2 className="breadcrumb">Projects / Create Project</h2>
           <div className="container">
@@ -77,8 +80,9 @@ const ProjectForm = () => {
             </div>
           </div>
         </div>
-      </div>
-    </>
+        </div>
+     </div>
+    </div>
   );
 };
 

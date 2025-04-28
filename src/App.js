@@ -11,10 +11,11 @@ import ProjectsList from './components/ProjectsList/ProjectsList';
 import EditProfileForm from './components/EditProfileForm/EditProfileForm';
 import ProjectDashboard from './components/Projects/Projects';
 import Dashboard from './components/Dashboard/Dashboard';
-import TaskForm from './components/createtask/Createtask';
+
 import TaskBoard from './components/TaskBoard/TaskBoard';
 import Settings from './components/Settings/Settings'
 import Projects from './components/Projects/Projects';
+import TaskForm from './components/createtask/Createtask';
 
 function App() {
   const [isDarkMode, setIsDarkMode] = useState(false);
@@ -58,6 +59,7 @@ function App() {
           <Route path="/create-project" element={<ProjectForm />} />
           <Route path="/create-task" element={<TaskForm />} />
           <Route path="/projects" element={<Projects />} />
+          <Route path="/project/:projectId/tasks" element={<TaskBoard />} />
           <Route 
   path="/settings" 
   element={<Settings toggleTheme={toggleTheme} isDarkMode={isDarkMode} />} 

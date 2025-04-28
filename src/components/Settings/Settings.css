@@ -1,113 +1,219 @@
-.div0{
-    display: flex;
+/* Modern Font */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+/* Base layout */
+.div0 {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  font-family: 'Inter', sans-serif;
+  background-color: #f4f5f7; /* Light gray background */
+}
+
+.div2 {
+  display: flex;
+  flex-direction: row;
+  flex: 1;
+}
+
+.div3 {
+  width: 250px;
+  display: flex;
+  flex-direction: column;
+  min-height: 100%;
+  background-color: #ffffff; /* White sidebar */
+  border-right: 1px solid #e5e7eb; /* Subtle border */
+  overflow-y: auto;
+  flex-shrink: 0;
+}
+
+.div4 {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  background-color: #f4f5f7; /* Matches overall background */
+  padding: 2rem;
+}
+
+/* Settings content */
+.settings-content {
+  background: #ffffff; /* White card */
+  border-radius: 8px;
+  padding: 1.5rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  max-width: 600px; /* Narrower for a focused look */
+  width: 100%;
+  margin: 0 auto; /* Center the content */
+}
+
+.settings-header {
+  padding-bottom: 1rem;
+  margin-bottom: 1.5rem;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.settings-title {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #1f2937; /* Dark gray for text */
+  margin: 0;
+}
+
+/* Settings item */
+.settings-item {
+  margin-bottom: 1rem;
+  padding: 0.75rem;
+  border-radius: 6px;
+  transition: background-color 0.2s ease;
+}
+
+.settings-item:hover {
+  background-color: #f9fafb; /* Subtle hover effect */
+}
+
+.settings-item-inner {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.settings-label {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  font-size: 1rem;
+  font-weight: 500;
+  color: #374151; /* Medium gray for labels */
+}
+
+.settings-icon {
+  color: #6b7280; /* Gray for icons */
+  font-size: 1.2rem;
+}
+
+/* Theme Toggle */
+.theme-button {
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: 6px;
+  font-size: 0.875rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.2s ease, transform 0.1s ease;
+  background-color: #3b82f6; /* Blue accent */
+  color: #ffffff;
+}
+
+.theme-button.dark {
+  background-color: #1f2937; /* Dark gray for dark mode */
+}
+
+.theme-button:hover {
+  background-color: #2563eb; /* Darker blue on hover */
+  transform: translateY(-1px);
+}
+
+/* Notification Toggle */
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 40px;
+  height: 20px;
+}
+
+.switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #d1d5db; /* Light gray when off */
+  transition: 0.3s;
+  border-radius: 20px;
+}
+
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 16px;
+  width: 16px;
+  left: 2px;
+  bottom: 2px;
+  background-color: #ffffff;
+  transition: 0.3s;
+  border-radius: 50%;
+}
+
+input:checked + .slider {
+  background-color: #3b82f6; /* Blue when on */
+}
+
+input:checked + .slider:before {
+  transform: translateX(20px);
+}
+
+/* Language Selection */
+.language-dropdown {
+  padding: 0.5rem;
+  border-radius: 6px;
+  border: 1px solid #e5e7eb;
+  background: #ffffff;
+  cursor: pointer;
+  font-size: 0.875rem;
+  font-weight: 500;
+  transition: border-color 0.2s ease;
+}
+
+.language-dropdown:hover {
+  border-color: #d1d5db;
+}
+
+/* Account Settings */
+.account-button {
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: 6px;
+  background-color: #10b981; /* Green accent */
+  color: #ffffff;
+  font-size: 0.875rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.2s ease, transform 0.1s ease;
+}
+
+.account-button:hover {
+  background-color: #059669; /* Darker green on hover */
+  transform: translateY(-1px);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .div2 {
     flex-direction: column;
-    min-height: 100vh;
   }
-  
-  .div2{
-    display: flex;
-    flex-direction: row;
-    height: 100%;
-  
-  }
-  .div3{
-    width: 30%;
-      display: flex;
-      align-items: flex-start;
-      min-height: 100vh;
-      background-color: white;
-      left: 0;
-      bottom: 0;
-      top: 0;
-      overflow-y: auto;
-  }
-  
-  
-  .div4{
-    display: flex;
-    margin-left: -10%;
+
+  .div3 {
     width: 100%;
+    border-right: none;
+    border-bottom: 1px solid #e5e7eb;
   }
-  .settings-container {
-    display: flex;
-    flex-direction: column;
-    min-height: 100vh;
-    background-color: var(--background-color);
-    color: var(--text-color);
-  }
-  
-  .settings-layout {
-    display: grid;
-    grid-template-columns: 240px 1fr;
-    gap: 2rem;
-    padding: 2rem;
-    max-width: 1200px;
-    margin: 0 auto;
-  }
-  
-  .settings-sidebar {
-    position: sticky;
-    top: 2rem;
-    height: fit-content;
-  }
-  
-  .settings-content {
-    background: var(--content-bg);
-    border-radius: 12px;
-    padding: 2rem;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-  }
-  
-  .settings-header {
-    border-bottom: 1px solid var(--border-color);
-    padding-bottom: 1rem;
-    margin-bottom: 2rem;
-  }
-  
-  .settings-title {
-    font-size: 1.8rem;
-    font-weight: 600;
-    color: var(--heading-color);
-  }
-  
-  .settings-item {
-    margin-bottom: 1.5rem;
+
+  .div4 {
     padding: 1rem;
-    background: var(--item-bg);
-    border-radius: 8px;
-    transition: transform 0.2s ease;
   }
-  
-  .theme-toggle {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+
+  .settings-content {
+    padding: 1rem;
   }
-  
-  .theme-button {
-    padding: 0.8rem 1.5rem;
-    border: none;
-    border-radius: 6px;
-    font-weight: 500;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
+
+  .settings-title {
+    font-size: 1.25rem;
   }
-  
-  .theme-button.light {
-    background: #f0f0f0;
-    color: #333;
-  }
-  
-  .theme-button.dark {
-    background: #333;
-    color: #fff;
-  }
-  
-  .theme-button:hover {
-    transform: translateY(-1px);
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
-  }
-  
+}

@@ -1,14 +1,13 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "./Createtask.css";
 import Vnavbar from '../Vnavbar/Vnavbar';
 import Navbar from "../Navbar/Navbar";
-import { useEffect } from "react";
 import axios from 'axios';
 
 const TaskForm = () => {
-  const priorityOptions = ["High", "Medium", "Low"];
-  const statusOptions = ["Pending", "In Progress", "Completed"];
   const [projects, setProjects] = useState([]);
+  const [priorities, setPriorities] = useState([]);
+  const [statuses, setStatuses] = useState([]);
 
   const [task, setTask] = useState({
     title: "",
@@ -16,25 +15,15 @@ const TaskForm = () => {
     startDate: "",
     endDate: "",
     description: "",
-    priority: ["High"],
-    status: ["Pending"],
-    project: "" 
+    priority: "",
+    status: "",
+    project: ""
   });
 
   const handleChange = (e) => {
     setTask({ ...task, [e.target.name]: e.target.value });
   };
 
-  const handleSelect = (e, field) => {
-    const value = e.target.value;
-    if (value && !task[field].includes(value)) {
-      setTask({ ...task, [field]: [...task[field], value] });
-    }
-  };
-
-  const handleRemove = (value, field) => {
-    setTask({ ...task, [field]: task[field].filter(item => item !== value) });
-  };
   const formatDate = (date) => {
     const d = new Date(date);
     const year = d.getFullYear();
@@ -43,14 +32,15 @@ const TaskForm = () => {
     const hours = String(d.getHours()).padStart(2, '0');
     const minutes = String(d.getMinutes()).padStart(2, '0');
     const seconds = String(d.getSeconds()).padStart(2, '0');
-    
     return `${year}-${month}-${day}T${hours}:${minutes}:${seconds}`;
   };
 
-  const formatClassName = (text) => text.toLowerCase().replace(/\s+/g, '-');
   const handleSubmit = async (e) => {
     e.preventDefault();
-
+    if (!task.priority || !task.status || !task.project) {
+      alert("Please select a priority, status, and project.");
+      return;
+    }
     try {
       const filteredTask = {
         title: task.title,
@@ -58,26 +48,23 @@ const TaskForm = () => {
         startDate: formatDate(task.startDate),
         endDate: formatDate(task.endDate),
         description: task.description,
-        project: {
-          idprojet: parseInt(task.project)
-        }
+        project: { idprojet: parseInt(task.project) }
       };
-      
-      console.log("Submitting task:", filteredTask);
 
-      // Send data to API
+      console.log("Submitting task:", filteredTask, "Priority ID:", task.priority, "Status ID:", task.status);
+
       const response = await axios.post(
-        "http://localhost:9090/api/tasks/create",
+        `http://localhost:9090/api/tasks/create?priorityId=${task.priority}&statusId=${task.status}`,
         filteredTask,
         {
           headers: {
             "Content-Type": "application/json",
             "Authorization": `Bearer ${localStorage.getItem("token").trim()}`
-          },
+          }
         }
       );
+      console.log("priority"+task.priority)
 
-      // Only reset task state, not the projects list
       console.log("Task created successfully!");
       setTask({
         title: "",
@@ -85,59 +72,51 @@ const TaskForm = () => {
         startDate: "",
         endDate: "",
         description: "",
-        priority: ["High"], // Reset to default values
-        status: ["Pending"],
-        project: "" 
+        priority: "",
+        status: "",
+        project: ""
       });
-
       alert("Task created successfully!");
     } catch (error) {
       console.error("Error:", error.response || error.message);
       if (error.response) {
-        console.log("Response data:", error.response.data);
         alert(`Error ${error.response.status}: ${JSON.stringify(error.response.data)}`);
       } else if (error.request) {
-        console.log("Request:", error.request);
         alert("No response received from server. Check your connection.");
       } else {
         alert(`Error: ${error.message}`);
       }
     }
-};
+  };
 
   useEffect(() => {
-    const fetchProjects = async () => {
+    const fetchData = async () => {
       try {
         const token = localStorage.getItem("token");
-        const response = await axios.get(
-          `http://localhost:9090/api/projects/owner/${localStorage.userId}`,
-          {
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
-        console.log("token: " + localStorage.getItem("token"));
-        setProjects(response.data || []); // Fallback to empty array if response.data is undefined or null
+        const [projectResponse, priorityResponse, statusResponse] = await Promise.all([
+          axios.get(`http://localhost:9090/api/projects/owner/${localStorage.userId}`, {
+            headers: { Authorization: `Bearer ${token}` }
+          }),
+          axios.get(`http://localhost:9090/api/priorities`, {
+            headers: { Authorization: `Bearer ${token}` }
+          }),
+          axios.get(`http://localhost:9090/api/statuses`, {
+            headers: { Authorization: `Bearer ${token}` }
+          })
+        ]);
+        setProjects(projectResponse.data || []);
+        setPriorities(priorityResponse.data || []);
+        setStatuses(statusResponse.data || []);
+        console.log("Priorities:", priorityResponse.data);
+        console.log("Statuses:", statusResponse.data);
       } catch (error) {
-        console.error("Error:", error);
-        if (error.response) {
-          console.log("Response data:", error.response.data);
-          console.log("Response status:", error.response.status);
-          alert(`Error ${error.response.status}: ${JSON.stringify(error.response.data)}`);
-        } else if (error.request) {
-          console.log("Request:", error.request);
-          alert("No response received from server. Check your connection.");
-        } else {
-          alert(`Error: ${error.message}`);
-        }
+        console.error("Error fetching data:", error);
+        alert("Failed to load projects, priorities, or statuses.");
       }
     };
-  
-    fetchProjects();
+    fetchData();
   }, []);
-  
+
   return (
     <div className="div0">
       <Navbar />
@@ -145,48 +124,23 @@ const TaskForm = () => {
         <div className="div3"><Vnavbar /></div>
         <div className="div4">
           <div className="task-form-container">
-            <form className="task-form"onSubmit={handleSubmit}>
-            <div className="task-inputs">
+            <form className="task-form" onSubmit={handleSubmit}>
+              <div className="task-inputs">
                 <div>
-                  <label htmlFor="title">Task Title</label>
-                  <input
-                    type="text"
-                    name="title"
-                    placeholder="Task Title"
-                    value={task.title}
-                    onChange={handleChange}
-                  />
+                  <label>Task Title</label>
+                  <input type="text" name="title" placeholder="Task Title" value={task.title} onChange={handleChange} />
                 </div>
-
                 <div>
-                  <label htmlFor="type">Task Type</label>
-                  <input
-                    type="text"
-                    name="type"
-                    placeholder="Task Type"
-                    value={task.type}
-                    onChange={handleChange}
-                  />
+                  <label>Task Type</label>
+                  <input type="text" name="type" placeholder="Task Type" value={task.type} onChange={handleChange} />
                 </div>
-
                 <div>
-                  <label htmlFor="startDate">Start Date</label>
-                  <input
-                    type="date"
-                    name="startDate"
-                    value={task.startDate}
-                    onChange={handleChange}
-                  />
+                  <label>Start Date</label>
+                  <input type="date" name="startDate" value={task.startDate} onChange={handleChange} />
                 </div>
-
                 <div>
-                  <label htmlFor="endDate">End Date</label>
-                  <input
-                    type="date"
-                    name="endDate"
-                    value={task.endDate}
-                    onChange={handleChange}
-                  />
+                  <label>End Date</label>
+                  <input type="date" name="endDate" value={task.endDate} onChange={handleChange} />
                 </div>
               </div>
               <div className="select-group">
@@ -194,48 +148,30 @@ const TaskForm = () => {
                 <select name="project" value={task.project} onChange={handleChange}>
                   <option value="">Select a project</option>
                   {Array.isArray(projects) && projects.map((proj, index) => (
-                    <option key={proj.idprojet || index} value={proj.idprojet}>
-                      {proj.nom}
-                    </option>
+                    <option key={proj.idprojet || index} value={proj.idprojet}>{proj.nom}</option>
                   ))}
                 </select>
               </div>
-
-
-              <textarea
-                name="description"
-                placeholder="Task Description"
-                value={task.description}
-                onChange={handleChange}
-              />
-
+              <textarea name="description" placeholder="Task Description" value={task.description} onChange={handleChange} />
               <div className="task-op-row">
                 <div className="select-group">
-                  <label>Assignee</label>
-                  <select name="assignee" value="" onChange={handleChange}>
-                    <option>Yash Ghori</option>
+                  <label>Priority</label>
+                  <select name="priority" value={task.priority} onChange={handleChange}>
+                    <option value="">Select Priority</option>
+                    {priorities.map((priority) => (
+                      <option key={priority.id} value={priority.id}>{priority.name}</option>
+                    ))}
                   </select>
                 </div>
-
-                {["priority", "status"].map((field) => (
-                  <div className="select-group" key={field}>
-                    <label>{field.charAt(0).toUpperCase() + field.slice(1)}</label>
-                    <div className="multi-select">
-                      {task[field].map((item) => (
-                        <span className={`tag ${formatClassName(item)}`} key={item}>
-                          {item}
-                          <button onClick={() => handleRemove(item, field)}>✖</button>
-                        </span>
-                      ))}
-                      <select onChange={(e) => handleSelect(e, field)}>
-                        <option value="">Select {field.charAt(0).toUpperCase() + field.slice(1)}</option>
-                        {(field === "priority" ? priorityOptions : statusOptions).map((option) => (
-                          <option key={option} value={option}>{option}</option>
-                        ))}
-                      </select>
-                    </div>
-                  </div>
-                ))}
+                <div className="select-group">
+                  <label>Status</label>
+                  <select name="status" value={task.status} onChange={handleChange}>
+                    <option value="">Select Status</option>
+                    {statuses.map((status) => (
+                      <option key={status.id} value={status.id}>{status.name}</option>
+                    ))}
+                  </select>
+                </div>
               </div>
 
               <div className="buttons">

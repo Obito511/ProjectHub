@@ -63,7 +63,7 @@
 }
 
 /* Mobile responsiveness */
-@media (max-width: 768px) {
+@media (max-width: 873px) {
   .sidebar {
     transform: translateX(-100%);
     top: 60px;
@@ -83,15 +83,5 @@
   display: flex;
 }
 
-.content {
-  flex: 1;
-  margin-left: 250px;
-  padding: 20px;
-  transition: margin-left 0.3s ease-in-out;
-}
 
-@media (max-width: 768px) {
-  .content {
-    margin-left: 0;
-  }
-}
+
