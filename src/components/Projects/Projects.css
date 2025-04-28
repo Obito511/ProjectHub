@@ -1,6 +1,92 @@
 
 
 
+}
+.div3{
+  width: 30%;
+    display: flex;
+    align-items: flex-start;
+    min-height: 100vh;
+    background-color: var(--background-color);
+    left: 0;
+    bottom: 0;
+    top: 0;
+    overflow-y: auto;
+}
+
+
+.div4{
+  display: flex;
+  margin-left: -10%;
+  width: 80%;
+}
+.edit-icon {
+  cursor: pointer;
+  margin-left: 8px;
+  color: #666;
+  transition: color 0.2s;
+}
+
+.edit-icon:hover {
+  color: #333;
+}
+
+.popup-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.popup-container {
+  background: white;
+  border-radius: 8px;
+  width: 500px;
+  max-width: 90%;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.popup-header {
+  padding: 16px;
+  border-bottom: 1px solid #eee;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.cancel{
+  background: #ff0b0b;
+  color: white;
+  padding: 8px 16px;
+  border: none;
+  height: 50px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.popup-content {
+  padding: 16px;
+  width: 390px;
+}
+
+.form-control {
+  width: 100%;
+  padding: 8px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  margin-top: 4px;
+}
+
+
+
+
+
+
 .projects-page {
     background-color: var(--background-color);
     min-height: 100vh;
@@ -347,11 +433,16 @@ select.form-control {
   border-top: 1px solid #e1e4e6;
   gap: 8px;
 }
-
+.popup {
+  justify-content: flex-end;
+  padding: 16px 24px;
+  border-top: 1px solid #e1e4e6;
+  gap: 8px;
+}
 .cancel-button {
   background: none;
   border: none;
-  color: #42526e;
+  color: #dd0000;
   cursor: pointer;
   padding: 8px 12px;
   font-weight: 500;
