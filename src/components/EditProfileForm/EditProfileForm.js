@@ -6,9 +6,6 @@ const EditProfileForm = () => {
   const [user, setUser] = useState({
     firstName: "",
     lastName: "",
-    email: "",
-    password: "",
-    timezone: "",
     profilePicture: "",
   });
 
@@ -28,16 +25,24 @@ const EditProfileForm = () => {
     setUser(prev => ({ ...prev, [name]: value }));
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    try {
-      await axios.put("http://localhost:9090/api/auth/update", user, { withCredentials: true });
-      alert("Profile updated successfully!");
-    } catch (err) {
-      console.error("Error updating profile:", err);
-      alert("Something went wrong while updating.");
-    }
-  };
+// In your React component (EditProfileForm.js)
+const handleSubmit = async (e) => {
+  e.preventDefault();
+  try {
+    await axios.put("http://localhost:9090/api/auth/update", user, { 
+      withCredentials: true,
+      headers: {
+         'Content-Type': 'application/json' ,
+        Authorization: `Bearer ${localStorage.getItem('token')}` // Add this
+      }
+    });
+    alert("Profile updated successfully!");
+    console.log(user)
+  } catch (err) {
+    console.error("Error updating profile:", err);
+    alert("Something went wrong while updating.");
+  }
+};
 
   return (
     <div className="profile-card edit-profile-card">

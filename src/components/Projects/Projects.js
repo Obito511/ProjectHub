@@ -57,6 +57,9 @@ const AddMemberPopup = ({ isOpen, onClose, projectName }) => {
 
   if (!isOpen) return null;
 
+
+  
+
   return (
     <div className="popup-overlay">
       <div className="popup-container">
@@ -208,6 +211,118 @@ export default function ProjectDashboard() {
   const closeAddMemberPopup = () => {
     setIsAddMemberPopupOpen(false);
   };
+  const EditProjectPopup = ({ 
+    isOpen, 
+    onClose, 
+    project, 
+    onSave 
+  }) => {
+    const [formData, setFormData] = useState({
+      name: project?.nom || "",       // Add null checks
+      description: project?.description || ""
+    });
+  
+    const handleChange = (e) => {
+      setFormData({
+        ...formData,
+        [e.target.name]: e.target.value
+      });
+    };
+  
+    const handleSubmit = async (e) => {
+      e.preventDefault();
+      try {
+        const response = await axios.put(
+          `http://localhost:9090/api/projects/${project.idprojet}`, // Changed from project.id
+          {
+            nom: formData.name,
+            description: formData.description
+          },
+          {
+            headers: {
+              "Authorization": "Bearer " + localStorage.getItem("token"),
+              "Content-Type": "application/json"
+            }
+          }
+        );
+        onSave(response.data);
+        onClose();
+      } catch (error)  {
+        console.error("Error updating project:", error);
+        if (error.response) {
+          if (error.response.status === 403) {
+            alert("Only the project owner can make changes");
+          } else if (error.response.status === 404) {
+            alert("Project not found");
+          }
+        } else {
+          alert("Error updating project");
+        }
+      }
+    };
+  
+    if (!isOpen) return null;
+  
+    return (
+      <div className="popup-overlay">
+        <div className="popup-container">
+          <div className="popup-header">
+            <h2>Edit Project</h2>
+            <button className="close-button" onClick={onClose}>
+              <CloseIcon />
+            </button>
+          </div>
+  
+          <form onSubmit={handleSubmit}>
+            <div className="popup-content">
+              <div className="form-group">
+                <label>Project Name <span className="required">*</span></label>
+                <input
+                  type="text"
+                  name="name"
+                  value={formData.name}
+                  onChange={handleChange}
+                  className="form-control"
+                  required
+                />
+              </div>
+  
+              <div className="form-group">
+                <label>Description</label>
+                <textarea
+                  name="description"
+                  value={formData.description}
+                  onChange={handleChange}
+                  className="form-control"
+                  rows="4"
+                />
+              </div>
+            </div>
+  
+            <div className="popup">
+              <button type="button" className="cancel" onClick={onClose}>
+                Cancel
+              </button>
+              <button type="submit" className="save-button">
+                Save Changes
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    );
+  };
+  const [isEditPopupOpen, setIsEditPopupOpen] = useState(false);
+  const [currentProject, setCurrentProject] = useState(null);
+  const handleSaveProject = (updatedProject) => {
+    setProjects(projects.map(project => 
+      project.idprojet === updatedProject.idprojet ? updatedProject : project
+    ));
+  };
+  const handleEditClick = (project) => {
+    setCurrentProject(project);
+    setIsEditPopupOpen(true);
+  };
 
   return (
     <>
@@ -233,7 +348,7 @@ export default function ProjectDashboard() {
                     <div className="project-card-header">
                       <div className="project-card-title">
                         {project.nom}
-                        <span className="edit-icon" title="Edit">
+                        <span className="edit-icon" title="Edit" onClick={() => handleEditClick(project)}>
                           <EditNoteOutlinedIcon />
                         </span>
                       </div>
@@ -297,7 +412,12 @@ export default function ProjectDashboard() {
           )}
         </div>
       </div>
-
+      <EditProjectPopup
+    isOpen={isEditPopupOpen}
+    onClose={() => setIsEditPopupOpen(false)}
+    project={currentProject}
+    onSave={handleSaveProject}
+  />
       {/* Add Member Popup */}
       <AddMemberPopup 
         isOpen={isAddMemberPopupOpen}
