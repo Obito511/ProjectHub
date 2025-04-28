@@ -1,13 +1,5 @@
-.div0{
-  display: flex;
-  flex-direction: column;
-  min-height: 100vh;
-}
 
-.div2{
-  display: flex;
-  flex-direction: row;
-  height: 100%;
+
 
 }
 .div3{
@@ -89,6 +81,7 @@
   border-radius: 4px;
   margin-top: 4px;
 }
+
 
 
 
