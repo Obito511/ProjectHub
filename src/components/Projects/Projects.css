@@ -1,23 +1,4 @@
 
-
-.div3{
-  width: 30%;
-    display: flex;
-    align-items: flex-start;
-    min-height: 100vh;
-    background-color: var(--background-color);
-    left: 0;
-    bottom: 0;
-    top: 0;
-    overflow-y: auto;
-}
-
-
-.div4{
-  display: flex;
-  margin-left: -10%;
-  width: 80%;
-}
 .edit-icon {
   cursor: pointer;
   margin-left: 8px;
