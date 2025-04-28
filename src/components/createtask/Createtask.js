@@ -120,7 +120,7 @@ const TaskForm = () => {
   return (
     <div className="div0">
       <Navbar />
-      <div className="div2">
+      <div className="div2_task">
         <div className="div3"><Vnavbar /></div>
         <div className="div4">
           <div className="task-form-container">
