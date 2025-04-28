@@ -91,15 +91,15 @@ const AssignMembersPopup = ({ isOpen, onClose, projectName, projectId, taskId, o
 
   return (
     <div className="popup-overlay">
-      <div className="popup-container">
-        <div className="popup-header">
+      <div className="popup-container1">
+        <div className="popup-header1">
           <h2>Assign Members - {projectName}</h2>
           <button className="close-button" onClick={onClose}>
             <CloseIcon />
           </button>
         </div>
         
-        <div className="popup-content">
+        <div className="popup-content1">
           {loading ? (
             <div className="loading-message">Loading members...</div>
           ) : error ? (
