@@ -1,15 +1,39 @@
-/* Container principal */
+
+.div3 {
+  width: 30%; /* Fixed width for sidebar, matching the screenshot */
+  display: flex;
+  flex-direction: column; /* Vertical content stacking */
+  align-items: flex-start; /* Align items to the start */
+  min-height: 100%; /* Matches parent height */
+  background-color: var(--background-color, #f8f9fa); /* Fallback color */
+  overflow-y: auto; /* Scroll if content overflows */
+  flex-shrink: 0; /* Prevents shrinking */
+}
+@media (max-width: 873px) {
+  .div2 {
+    flex-direction: column;
+  }
+  .div3 {
+    width: 100%; /* Full width on mobile */
+  }
+  .right-bar {
+    display: none; /* Hide right bar on mobile */
+  }
+}
 .task-form-container {
   width: 100%;
-  max-width: 700px;
-  margin: 40px auto;
+  max-width: 600px;
+  display: flex;
   padding: 40px;
   background-color: var(--background-color);
   border-radius: 12px;
   box-shadow: 0 6px 12px rgba(0, 0, 0, 0.08);
+  
 }
 
-/* Formulaire général */
+  
+
+
 .task-form {
   display: flex;
   flex-direction: column;

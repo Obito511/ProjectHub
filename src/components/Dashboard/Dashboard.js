@@ -38,19 +38,20 @@ const Dashboard = () => {
   ];
 
   return (
-    <>
-    <Navbar />
-    <div className="main-layout">
-      <Vnavbar />
-    <div className="dashboard">
+    <div className="div0">
+      <Navbar />
+      <div className="div2">
+        <div className="div3"><Vnavbar /></div>
+        <div className="div4">
+        <div className="dashboard">
       {/* Projects Panel */}
       <div className="card projects-panel">
         <h2>Projects</h2>
         <div className="project-images">
-  <img src="placeholder1.png" alt="Project 1" />
-  <img src="placeholder2.png" alt="Project 2" />
-  <img src="placeholder3.png" alt="Project 3" />
-</div>
+          <img src="placeholder1.png" alt="Project 1" />
+          <img src="placeholder2.png" alt="Project 2" />
+          <img src="placeholder3.png" alt="Project 3" />
+        </div>
         <span className="file-count">52 files</span>
       </div>
 
@@ -118,8 +119,12 @@ const Dashboard = () => {
         </select>
       </div>
     </div>
+
+        </div>
+      </div>
     </div>
-      </>
+    
+    
   );
 };
 
