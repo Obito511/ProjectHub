@@ -38,8 +38,7 @@
   align-items: flex-start; /* Align items to the start */
   background-color: var(--background-color, #ffffff); /* Fallback color */
   padding: 20px; /* Adds spacing for content */
-  justify-content: center;
-  align-items: center;
+  
 }
 @media (max-width: 873px) {
   .div2 {

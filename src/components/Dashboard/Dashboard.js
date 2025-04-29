@@ -43,88 +43,142 @@ const Dashboard = () => {
       <div className="div2">
         <div className="div3"><Vnavbar /></div>
         <div className="div4">
-        <div className="dashboard">
-      {/* Projects Panel */}
-      <div className="card projects-panel">
-        <h2>Projects</h2>
-        <div className="project-images">
-          <img src="placeholder1.png" alt="Project 1" />
-          <img src="placeholder2.png" alt="Project 2" />
-          <img src="placeholder3.png" alt="Project 3" />
+          <div className="dashboard-grid">
+            {/* Projects Card */}
+            <div className="dashboard-card">
+              <div className="card-header">
+                <h2 className="card-title">Projects</h2>
+                <p className="card-subtitle">Recent project activities</p>
+              </div>
+              <div className="card-content">
+                <div className="project-gallery">
+                  <img className="project-image" src="placeholder1.png" alt="Project 1" />
+                  <img className="project-image" src="placeholder2.png" alt="Project 2" />
+                  <img className="project-image" src="placeholder3.png" alt="Project 3" />
+                </div>
+                <span className="file-count">52 files</span>
+              </div>
+              <div className="card-footer">
+                <select className="time-filter">
+                  <option>This Week</option>
+                  <option>This Month</option>
+                  <option>This Quarter</option>
+                </select>
+              </div>
+            </div>
+
+            {/* Tasks Card */}
+            <div className="dashboard-card">
+              <div className="card-header">
+                <h2 className="card-title">Tasks</h2>
+                <p className="card-subtitle">Task completion status</p>
+              </div>
+              <div className="card-content">
+                <div className="chart-container">
+                  <PieChart width={200} height={200}>
+                    <Pie
+                      data={pieData}
+                      dataKey="value"
+                      nameKey="name"
+                      cx="50%"
+                      cy="50%"
+                      outerRadius={80}
+                      label
+                    >
+                      {pieData.map((entry, index) => (
+                        <Cell key={`pie-cell-${index}`} fill={entry.color} />
+                      ))}
+                    </Pie>
+                    <Tooltip />
+                  </PieChart>
+                </div>
+              </div>
+              <div className="card-footer">
+                <select className="time-filter">
+                  <option>This Week</option>
+                  <option>This Month</option>
+                  <option>This Quarter</option>
+                </select>
+              </div>
+            </div>
+
+            {/* Work Log Card */}
+            <div className="dashboard-card">
+              <div className="card-header">
+                <h2 className="card-title">Work Log</h2>
+                <p className="card-subtitle">Product development breakdown</p>
+              </div>
+              <div className="card-content">
+                <div className="chart-container">
+                  <PieChart width={200} height={200}>
+                    <Pie
+                      data={donutData}
+                      dataKey="value"
+                      nameKey="name"
+                      cx="50%"
+                      cy="50%"
+                      innerRadius={50}
+                      outerRadius={80}
+                      label
+                    >
+                      {donutData.map((entry, index) => (
+                        <Cell key={`donut-cell-${index}`} fill={entry.color} />
+                      ))}
+                    </Pie>
+                    <Tooltip />
+                  </PieChart>
+                </div>
+              </div>
+              <div className="card-footer">
+                <select className="time-filter">
+                  <option>This Week</option>
+                  <option>This Month</option>
+                  <option>This Quarter</option>
+                </select>
+              </div>
+            </div>
+
+            {/* Performance Card */}
+            <div className="dashboard-card">
+              <div className="card-header">
+                <h2 className="card-title">Performance</h2>
+                <p className="card-subtitle">Target vs achievement</p>
+              </div>
+              <div className="card-content">
+                <ResponsiveContainer width="100%" height={200}>
+                  <LineChart data={lineData}>
+                    <Line 
+                      type="monotone" 
+                      dataKey="achieved" 
+                      stroke="#4318FF" 
+                      strokeWidth={2}
+                      dot={{ r: 4 }}
+                      activeDot={{ r: 6 }}
+                    />
+                    <Line 
+                      type="monotone" 
+                      dataKey="target" 
+                      stroke="#6AD2FF" 
+                      strokeWidth={2}
+                      strokeDasharray="5 5"
+                      dot={{ r: 4 }}
+                    />
+                    <Tooltip formatter={(value, name) => [`${value} Projects`, name === "achieved" ? "Achieved" : "Target"]} />
+                  </LineChart>
+                </ResponsiveContainer>
+              </div>
+              <div className="card-footer">
+                <select className="time-filter">
+                  <option>This Week</option>
+                  <option>This Month</option>
+                  <option>This Quarter</option>
+                </select>
+              </div>
+            </div>
+          </div>
         </div>
-        <span className="file-count">52 files</span>
-      </div>
-
-      {/* Tasks Panel */}
-      <div className="card tasks-panel">
-        <h2>Tasks</h2>
-        <PieChart width={200} height={200}>
-          <Pie
-            data={pieData}
-            dataKey="value"
-            nameKey="name"
-            cx="50%"
-            cy="50%"
-            outerRadius={80}
-            label
-          >
-            {pieData.map((entry, index) => (
-              <Cell key={`pie-cell-${index}`} fill={entry.color} />
-            ))}
-          </Pie>
-          <Tooltip />
-        </PieChart>
-        <select className="dropdown">
-          <option>This Week</option>
-        </select>
-      </div>
-
-      {/* Work Log Panel (Donut Chart) */}
-      <div className="card work-log-panel">
-        <h2>Work Log</h2>
-        <PieChart width={200} height={200}>
-          <Pie
-            data={donutData}
-            dataKey="value"
-            nameKey="name"
-            cx="50%"
-            cy="50%"
-            innerRadius={50}
-            outerRadius={80}
-            label
-          >
-            {donutData.map((entry, index) => (
-              <Cell key={`donut-cell-${index}`} fill={entry.color} />
-            ))}
-          </Pie>
-          <Tooltip />
-        </PieChart>
-        <select className="dropdown">
-          <option>This Week</option>
-        </select>
-      </div>
-
-      {/* Performance Panel */}
-      <div className="card performance-panel">
-        <h2>Performance</h2>
-        <ResponsiveContainer width="100%" height={250}>
-          <LineChart data={lineData}>
-            <Line type="monotone" dataKey="achieved" stroke="#FF0000" />
-            <Line type="monotone" dataKey="target" stroke="#0000FF" />
-            <Tooltip formatter={(value, name) => [`${value} Projects`, name]} />
-          </LineChart>
-        </ResponsiveContainer>
-        <select className="dropdown">
-          <option>This Week</option>
-        </select>
       </div>
     </div>
-
-        </div>
-      </div>
-    </div>
-    
-    
   );
 };
 

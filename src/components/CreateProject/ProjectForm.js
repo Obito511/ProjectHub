@@ -51,7 +51,7 @@ const ProjectForm = () => {
         <div className="div4">
         <div className="page-container">
           <h2 className="breadcrumb">Projects / Create Project</h2>
-          <div className="container">
+          <div className="container_cp">
             <div className="form-section">
               <div className="form-group">
                 <label>Project Title</label>
