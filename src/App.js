@@ -16,6 +16,8 @@ import TaskBoard from './components/TaskBoard/TaskBoard';
 import Settings from './components/Settings/Settings'
 import Projects from './components/Projects/Projects';
 import TaskForm from './components/createtask/Createtask';
+import MemberProjects from './components/MemberProjects/MemberProjects';
+
 
 function App() {
   const [isDarkMode, setIsDarkMode] = useState(false);
@@ -55,7 +57,7 @@ function App() {
           <Route path="/projects" element={<Projects />} />
           <Route path="/profile" element={<ProfilePage />} />
           <Route path="/edit-profile" element={<EditProfileForm />} />
-          <Route path="/task-board" element={<TaskBoard />} />
+          <Route path="/memberprojects" element={<MemberProjects />} />
           <Route path="/task" element={<Task />} />
           <Route path="/create-project" element={<ProjectForm />} />
           <Route path="/create-task" element={<TaskForm />} />
