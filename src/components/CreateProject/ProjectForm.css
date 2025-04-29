@@ -6,12 +6,6 @@ body {
   padding: 0;
 }
 
-/* Main Layout */
-.main-layout {
-  display: flex;
-  min-height: 100vh;
-}
-
 
 /* Vertical Sidebar + Content */
 .page-container {
@@ -19,6 +13,7 @@ body {
   display: flex;
   flex-direction: column;
   flex: 1;
+  max-width: 950px;
 }
 
 /* Breadcrumb Styling */
@@ -29,8 +24,9 @@ body {
 }
 
 /* Main Card Container */
-.container {
-  width: 90%;
+.container_cp {
+  width: 950px;
+  min-width: 500px;
   background-color: white;
   border-radius: 10px;
   padding: 30px;
@@ -46,6 +42,8 @@ body {
   gap: 20px;
   flex-wrap: wrap;
   margin-bottom: 10px; /* reduced from 20px to bring button up */
+    max-width: 950px;
+
 }
 .form-group {
   display: flex;
