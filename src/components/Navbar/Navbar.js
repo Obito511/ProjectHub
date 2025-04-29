@@ -6,13 +6,36 @@ import NotificationsIcon from "@mui/icons-material/Notifications";
 import MenuIcon from "@mui/icons-material/Menu";
 import CloseIcon from "@mui/icons-material/Close";
 import Vnavbar from '../Vnavbar/Vnavbar';
+import NotificationListener from './NotificationListener'; // Import the NotificationListener component
 
 function Navbar() {
   const [user, setUser] = useState(null);
   const [showDisconnect, setShowDisconnect] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [showNotifications, setShowNotifications] = useState(false); // New state for toggling notifications
+  const [notifications, setNotifications] = useState([]); // Store notifications
   const navigate = useNavigate();
+  const markAsRead = (notificationId) => {
+    const token = localStorage.getItem('token');
+    fetch(`http://localhost:9090/api/notifications/mark-read/${notificationId}`, {
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${token}`,
+        'Content-Type': 'application/json',
+      },
+    })
+      .then((response) => {
+        if (response.ok) {
+          setNotifications((prev) =>
+            prev.map((n) =>
+              n.id === notificationId ? { ...n, read: true } : n
+            )
+          );
+        }
+      })
+      .catch((error) => console.error('Error marking notification as read:', error));
+  };
 
   useEffect(() => {
     const token = localStorage.getItem("token");
@@ -25,15 +48,10 @@ function Navbar() {
         },
         credentials: "include",
       })
-        .then(res => {
-          console.log("Response Status:", res.status);
-          return res.text();
-        })
+        .then(res => res.text())
         .then(text => {
-          console.log("Response Body:", text);
           try {
             const data = JSON.parse(text);
-            console.log("Current user:", data);
             setUser(data);
           } catch (e) {
             console.log("Error parsing response:", e);
@@ -45,17 +63,12 @@ function Navbar() {
     }
   }, []);
 
-  // Close mobile menu when window resizes above mobile breakpoint
   useEffect(() => {
-    const handleResize = () => {
-      if (window.innerWidth > 768 && mobileMenuOpen) {
-        setMobileMenuOpen(false);
-      }
-    };
-
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
-  }, [mobileMenuOpen]);
+    if (showNotifications) {
+      // This effect listens for notifications if the notifications area is open
+      // You can handle notifications here if needed
+    }
+  }, [showNotifications]);
 
   const handleDisconnect = () => {
     localStorage.removeItem("token");
@@ -69,57 +82,61 @@ function Navbar() {
     <>
       <div className="navbar">
         <div className="navbar-left">
-          <button 
-            className="menu-toggle" 
+          <button
+            className="menu-toggle"
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
           >
             <MenuIcon />
           </button>
-          {/* Preserve your original logo here */}
           <div className="logo">
-            {/* If you have a logo image */}
             <img src="/name.png" alt="Logo" className="logo-image" />
-            {/* Or if you don't have an image but had some text/element */}
           </div>
         </div>
 
         <div className="navbar-center">
           <div className="search-container">
-            <SearchIcon 
-              className="search-icon" 
-              onClick={() => setSearchOpen(!searchOpen)} 
-            />
-            <input 
-              type="text" 
-              placeholder="Search..." 
-              className={searchOpen ? "search-active" : ""} 
-            />
+            <SearchIcon className="search-icon" onClick={() => setSearchOpen(!searchOpen)} />
+            <input type="text" placeholder="Search..." className={searchOpen ? "search-active" : ""} />
           </div>
         </div>
 
         <div className="navbar-right">
-          <button className="notification-icon">
+          <button className="notification-icon" onClick={() => setShowNotifications(!showNotifications)}>
             <NotificationsIcon />
           </button>
 
-          <div 
-            className="profile-container" 
-            onClick={() => setShowDisconnect(!showDisconnect)}
+          {/* Notifications Area */}
+          {showNotifications && (
+  <div className="notifications-dropdown">
+    <h4>Your Notifications</h4>
+    {notifications.length === 0 ? (
+      <p>No new notifications</p>
+    ) : (
+      <ul>
+        {notifications.map((notification) => (
+          <li
+            key={notification.id}
+            style={{ opacity: notification.read ? 0.6 : 1 }}
+            onClick={() => markAsRead(notification.id)}
           >
+            {notification.message} <br />
+            <small>{new Date(notification.createdAt).toLocaleString()}</small>
+          </li>
+        ))}
+      </ul>
+    )}
+  </div>
+)}
+
+          <div className="profile-container" onClick={() => setShowDisconnect(!showDisconnect)}>
             <div className="profile">
-              <img 
-                src="/profile-placeholder.jpg" 
-                alt="Profile" 
-                className="profile-pic" 
-              />
+              <img src="/profile-placeholder.jpg" alt="Profile" className="profile-pic" />
               <div className="profile-info">
-                <div className="profile-name">
-                  {user?.first_name} {user?.last_name}
-                </div>
+                <div className="profile-name"> {user?.firstName} {user?.lastNname} </div>
                 <div className="profile-location">{user?.timezone}</div>
               </div>
             </div>
-            
+
             {showDisconnect && (
               <div className="disconnect-button" onClick={handleDisconnect}>
                 Disconnect
@@ -129,13 +146,14 @@ function Navbar() {
         </div>
       </div>
 
-      {/* Mobile Sidebar - Controlled by state */}
+      {/* Mobile Sidebar */}
       <div className="main-container">
         <Vnavbar isMobileOpen={mobileMenuOpen} setIsMobileOpen={setMobileMenuOpen} />
-        <div className="content">
-          {/* Your main content goes here */}
-        </div>
+        <div className="content"></div>
       </div>
+
+      {/* Notification Listener component */}
+      <NotificationListener userId={user?.id} setNotifications={setNotifications} />
     </>
   );
 }
