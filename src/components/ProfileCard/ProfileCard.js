@@ -32,7 +32,7 @@ const ProfileCard = () => {
             "Authorization": `Bearer ${token}`,
             "Content-Type": "application/json",
           },
-          credentials: "include"
+          credentials: "include",
         });
 
         if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
@@ -40,8 +40,7 @@ const ProfileCard = () => {
         const userData = await response.json();
         setUser(userData);
         // Extract public ID from Cloudinary URL if needed
-        const publicId = userData.cloudinaryPublicId || 
-                        (userData.profilePicture?.split('/upload/')[1]?.split('.')[0]);
+        const publicId = userData.cloudinaryPublicId;
         setImagePublicId(publicId);
 
       } catch (err) {
