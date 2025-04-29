@@ -35,6 +35,7 @@ function Navbar() {
             const data = JSON.parse(text);
             console.log("Current user:", data);
             setUser(data);
+            
           } catch (e) {
             console.log("Error parsing response:", e);
           }
@@ -107,11 +108,11 @@ function Navbar() {
             onClick={() => setShowDisconnect(!showDisconnect)}
           >
             <div className="profile">
-              <img 
-                src="/profile-placeholder.jpg" 
-                alt="Profile" 
-                className="profile-pic" 
-              />
+            <img 
+  src={user?.profilePicture || "/profile-placeholder.jpg"} 
+  alt="Profile" 
+  className="profile-pic" 
+/>
               <div className="profile-info">
                 <div className="profile-name">
                   {user?.first_name} {user?.last_name}

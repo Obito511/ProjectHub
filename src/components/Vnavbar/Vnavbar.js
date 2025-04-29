@@ -43,13 +43,6 @@ function Vnavbar({ isMobileOpen, setIsMobileOpen }) {
           <span>Dashboard</span>
         </li>
         
-        <li 
-          className="sidebar-item" 
-          onClick={() => handleNavigation("/task-board")}
-        >
-          <TaskIcon className="icon" />
-          <span>Tasks</span>
-        </li>
         
         <li 
           className="sidebar-item" 
@@ -64,9 +57,16 @@ function Vnavbar({ isMobileOpen, setIsMobileOpen }) {
           onClick={() => handleNavigation("/projects")}
         >
           <ListAltIcon className="icon" />
-          <span>Projects</span>
+          <span>My Projects</span>
         </li>
         
+        <li 
+          className="sidebar-item" 
+          onClick={() => handleNavigation("/memberprojects")}
+        >
+          <TaskIcon className="icon" />
+          <span>Project member</span>
+        </li>
         <li 
           className="sidebar-item" 
           onClick={() => handleNavigation("/create-project")}
