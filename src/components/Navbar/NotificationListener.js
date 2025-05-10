@@ -39,31 +39,30 @@ const NotificationListener = ({ userId, setNotifications }) => {
       });
     };
 
-    const loadNotifications = () => {
+    const loadNotifications = async () => {
       const token = localStorage.getItem('token');
-
-      fetch(`http://localhost:9090/api/notifications/${userId}`, {
-        method: 'GET',
-        headers: {
-          Authorization: `Bearer ${token}`,
-          'Content-Type': 'application/json',
-        },
-      })
-        .then((response) => {
-          if (!response.ok) {
-            throw new Error('Failed to fetch notifications');
-          }
-          console.log(response.data);
-          return response.json();
-        })
-        .then((data) => {
-          // Ensure data is an array and map to expected format if needed
-          setNotifications(Array.isArray(data) ? data : []);
-        })
-        .catch((error) => {
-          console.error('Error loading notifications:', error);
+    
+      try {
+        const response = await fetch(`http://localhost:9090/api/notifications/${userId}`, {
+          method: 'GET',
+          headers: {
+            Authorization: `Bearer ${token}`,
+            'Content-Type': 'application/json',
+          },
         });
+    
+        if (!response.ok) {
+          throw new Error('Failed to fetch notifications');
+        }
+    
+        const data = await response.json();
+        console.log('Notifications fetched:', data);
+        setNotifications(Array.isArray(data) ? data : []);
+      } catch (error) {
+        console.error('Error loading notifications:', error);
+      }
     };
+    
 
     // Connect to WebSocket and load initial notifications
     connectWebSocket();

@@ -1,124 +1,169 @@
-/* General Layout */
-body {
-  font-family: Arial, sans-serif;
-  background-color: #f5f7fa;
-  margin: 0;
-  padding: 0;
+/* ProjectSidebarForm.css */
+
+/* Overlay */
+.sidebar-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 40;
 }
 
+/* Sidebar Container */
+.sidebar-container {
+  position: fixed;
+  top: 0;
+  right: -400px; /* Start off-screen */
+  height: 100%;
+  width: 400px;
+  background-color: white;
+  box-shadow: -4px 0 15px rgba(0, 0, 0, 0.1);
+  z-index: 100000000050;
+  transition: right 0.3s ease-in-out;
+  overflow: auto;        /* Enable scrolling if needed */
+  scrollbar-width: none; /* Hide scrollbar for Firefox */
+  -ms-overflow-style: none; /* Hide scrollbar for IE and Edge */
+}
 
-/* Vertical Sidebar + Content */
-.page-container {
-  padding: 20px 40px;
+.sidebar-container.open {
+  right: 0;
+}
+
+/* Sidebar Content */
+.sidebar-content {
+  padding: 24px;
+  height: 100%;
   display: flex;
   flex-direction: column;
-  flex: 1;
-  max-width: 950px;
 }
 
-/* Breadcrumb Styling */
-.breadcrumb {
-  color: #718096;
+/* Header */
+.sidebar-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid #eaeaea;
+}
+
+.sidebar-title {
+  font-size: 20px;
+  font-weight: 600;
+  color: #333;
+  margin: 0;
+}
+
+.close-button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 4px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.2s;
+}
+
+.close-button:hover {
+  background-color: #f5f5f5;
+}
+
+/* Form */
+.sidebar-form {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.error-message {
+  background-color: #FEE2E2;
+  color: #B91C1C;
+  padding: 12px;
+  border-radius: 6px;
+  margin-bottom: 16px;
   font-size: 14px;
+}
+
+.form-group {
   margin-bottom: 20px;
 }
 
-/* Main Card Container */
-.container_cp {
-  width: 950px;
-  min-width: 500px;
-  background-color: white;
-  border-radius: 10px;
-  padding: 30px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-  flex-grow: 1;
-  display: flex;
-  flex-direction: column;
+.form-label {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: 500;
+  color: #374151;
 }
 
-/* Form Layout */
-.form-section {
-  display: flex;
-  gap: 20px;
-  flex-wrap: wrap;
-  margin-bottom: 10px; /* reduced from 20px to bring button up */
-    max-width: 950px;
-
-}
-.form-group {
-  display: flex;
-  flex-direction: column;
-  flex: 1;
-  min-width: 250px;
-  margin-bottom: 10px; /* add this to better control spacing */
-}
-label {
-  font-weight: 600;
-  margin-bottom: 6px;
-  color: #2d3748;
+.required {
+  color: #EF4444;
 }
 
-input,
-select,
-textarea {
+.form-input,
+.form-textarea {
+  width: 100%;
   padding: 12px;
-  border: 1px solid #cbd5e0;
+  border: 1px solid #D1D5DB;
   border-radius: 6px;
   font-size: 14px;
-  background-color: #f9fafb;
+  transition: border-color 0.2s, box-shadow 0.2s;
 }
 
-textarea {
+.form-input:focus,
+.form-textarea:focus {
+  outline: none;
+  border-color: #3B82F6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.3);
+}
+
+.form-textarea {
   resize: none;
-  height: 100px;
+  min-height: 120px;
 }
 
-/* Roles Section */
-.roles-container {
-  background-color: #edf2f7;
-  border-radius: 8px;
-  padding: 10px;
-  margin-top: 10px;
-}
-
-.role-item {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  padding: 5px 0;
-}
-
-/* Button Styles */
+/* Buttons */
 .button-group {
   display: flex;
   justify-content: flex-end;
-  margin-top: 5px; /* reduced further */
-  gap: 10px;
+  gap: 12px;
+  margin-top: auto;
+  padding-top: 16px;
 }
-.create-btn {
-  background-color: #3182ce;
+
+.cancel-button,
+.create-button {
+  padding: 10px 16px;
+  border-radius: 6px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  border: none;
+}
+
+.cancel-button {
+  background-color: #F3F4F6;
+  color: #4B5563;
+}
+
+.cancel-button:hover {
+  background-color: #E5E7EB;
+}
+
+.create-button {
+  background-color: #3B82F6;
   color: white;
-  padding: 10px 20px;
-  border: none;
-  border-radius: 6px;
-  font-weight: bold;
-  cursor: pointer;
 }
 
-.delete-btn {
-  background-color: #e2e8f0;
-  color: #2d3748;
-  padding: 10px 20px;
-  border: none;
-  border-radius: 6px;
-  font-weight: bold;
-  cursor: pointer;
+.create-button:hover {
+  background-color: #2563EB;
 }
 
-.create-btn:hover {
-  background-color: #2b6cb0;
-}
-
-.delete-btn:hover {
-  background-color: #cbd5e0;
+.cancel-button:disabled,
+.create-button:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
 }

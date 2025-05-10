@@ -94,7 +94,7 @@ const AssignMembersPopup = ({ isOpen, onClose, projectName, projectId, taskId, o
       <div className="popup-container1">
         <div className="popup-header1">
           <h2>Assign Members - {projectName}</h2>
-          <button className="close-button" onClick={onClose}>
+          <button className="close-button2" onClick={onClose}>
             <CloseIcon />
           </button>
         </div>
@@ -121,7 +121,7 @@ const AssignMembersPopup = ({ isOpen, onClose, projectName, projectId, taskId, o
                     <tr key={member.id} className="member-item">
                       <td className="member-info">
                         <img 
-                          src={member.avatar || "https://i.pravatar.cc/32?img=1"} 
+                          src={member.profilePicture || "/placeholder.jpg"} 
                           alt="avatar" 
                           className="member-avatar" 
                         />
@@ -149,7 +149,7 @@ const AssignMembersPopup = ({ isOpen, onClose, projectName, projectId, taskId, o
         </div>
         
         <div className="popup-footer">
-          <button className="close-button" onClick={onClose}>Close</button>
+          <button className="close-button2" onClick={onClose}>Close</button>
         </div>
       </div>
     </div>

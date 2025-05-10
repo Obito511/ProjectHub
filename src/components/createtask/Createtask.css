@@ -69,13 +69,13 @@ textarea {
   gap: 30px;
 }
 
-.select-group {
+.select-group1 {
   flex: 1;
   display: flex;
   flex-direction: column;
 }
 
-.select-group label {
+.select-group1 label {
   font-weight: bold;
   margin-bottom: 6px;
 }

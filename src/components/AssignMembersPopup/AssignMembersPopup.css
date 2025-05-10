@@ -49,21 +49,22 @@
     justify-content: flex-end;
   }
   
-  .close-button {
+  .close-button2 {
     background: none;
     border: none;
     cursor: pointer;
     display: flex;
     align-items: center;
     justify-content: center;
-    color: #666;
+    color: rgb(17, 17, 17);
     padding: 8px;
     border-radius: 4px;
     transition: background-color 0.2s;
   }
   
-  .close-button:hover {
+  .close-button2:hover {
     background-color: #f0f0f0;
+    color: red;
   }
   
   .loading-message,

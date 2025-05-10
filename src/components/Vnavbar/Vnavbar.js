@@ -11,6 +11,7 @@ import AddTaskIcon from "@mui/icons-material/AddTask";
 import AddBoxIcon from "@mui/icons-material/AddBox";
 import MenuIcon from "@mui/icons-material/Menu";
 import CloseIcon from "@mui/icons-material/Close";
+import NotificationsActiveIcon from '@mui/icons-material/NotificationsActive';
 
 function Vnavbar({ isMobileOpen, setIsMobileOpen }) {
   const navigate = useNavigate();
@@ -42,6 +43,7 @@ function Vnavbar({ isMobileOpen, setIsMobileOpen }) {
           <DashboardIcon className="icon" />
           <span>Dashboard</span>
         </li>
+       
         
         
         <li 
@@ -65,15 +67,9 @@ function Vnavbar({ isMobileOpen, setIsMobileOpen }) {
           onClick={() => handleNavigation("/memberprojects")}
         >
           <TaskIcon className="icon" />
-          <span>Project member</span>
+          <span>Assigned Projects</span>
         </li>
-        <li 
-          className="sidebar-item" 
-          onClick={() => handleNavigation("/create-project")}
-        >
-          <AddBoxIcon className="icon" />
-          <span>Create Project</span>
-        </li>
+        
         
         <li 
           className="sidebar-item" 
@@ -81,6 +77,13 @@ function Vnavbar({ isMobileOpen, setIsMobileOpen }) {
         >
           <PersonIcon className="icon" />
           <span>Profile</span>
+        </li>
+        <li 
+          className="sidebar-item" 
+          onClick={() => handleNavigation("/settings/reminders")}
+        >
+          <NotificationsActiveIcon className="nav-icon" />
+          <span>Task Reminders</span>
         </li>
         
         <li 

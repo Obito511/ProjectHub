@@ -99,9 +99,9 @@ const AddMemberPopup = ({ isOpen, onClose, projectName, projectId, onMembersAdde
     if (!isOpen) return null;
   
     return (
-      <div className="popup-overlay">
-        <div className="popup-container">
-          <div className="popup-header">
+      <div className="popup-overlay1">
+        <div className="popup-container1">
+          <div className="popup-header1">
             <h2>Add people to {projectName}</h2>
             <button className="close-button" onClick={onClose}>
               <CloseIcon />
