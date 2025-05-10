@@ -122,7 +122,7 @@ const ProfileCard = () => {
           />
         ) : (
           <img 
-            src="obito.webp" 
+            src={user?.profilePicture || "/placeholder.jpg"} 
             alt="Default profile" 
             className="profile-image" 
           />

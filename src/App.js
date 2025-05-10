@@ -11,13 +11,11 @@ import ProjectsList from './components/ProjectsList/ProjectsList';
 import EditProfileForm from './components/EditProfileForm/EditProfileForm';
 import ProjectDashboard from './components/Projects/Projects';
 import Dashboard from './components/Dashboard/Dashboard';
-
+import ReminderSettings from './components/ReminderSettings/ReminderSettings';
 import TaskBoard from './components/TaskBoard/TaskBoard';
 import Settings from './components/Settings/Settings'
 import Projects from './components/Projects/Projects';
 import TaskForm from './components/createtask/Createtask';
-import MemberProjects from './components/MemberProjects/MemberProjects';
-
 
 function App() {
   const [isDarkMode, setIsDarkMode] = useState(false);
@@ -50,19 +48,20 @@ function App() {
     
     <Router>
       <div className="div0">
-        
         <Routes>
           <Route path="/login" element={<Login />} />
           <Route path="/accueil" element={<Dashboard />} />
           <Route path="/projects" element={<Projects />} />
           <Route path="/profile" element={<ProfilePage />} />
           <Route path="/edit-profile" element={<EditProfileForm />} />
-          <Route path="/memberprojects" element={<MemberProjects />} />
+          <Route path="/task-board" element={<TaskBoard />} />
           <Route path="/task" element={<Task />} />
           <Route path="/create-project" element={<ProjectForm />} />
           <Route path="/create-task" element={<TaskForm />} />
           <Route path="/projects" element={<Projects />} />
           <Route path="/project/:projectId/tasks" element={<TaskBoard />} />
+          <Route path="/settings/reminders" element={<ReminderSettings />} />
+
           <Route 
   path="/settings" 
   element={<Settings toggleTheme={toggleTheme} isDarkMode={isDarkMode} />} 

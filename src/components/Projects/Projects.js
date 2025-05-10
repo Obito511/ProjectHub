@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import Vnavbar from '../Vnavbar/Vnavbar';
 import "./Projects.css";
-import Navbar from "../Navbar/Navbar";
 import axios from "axios";
 import AddIcon from "@mui/icons-material/Add";
 import FileUploadIcon from "@mui/icons-material/FileUpload";
@@ -14,6 +13,8 @@ import MicrosoftIcon from '@mui/icons-material/Microsoft';
 import LinkedInIcon from '@mui/icons-material/LinkedIn';
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
 import { useNavigate } from "react-router-dom";
+import Navbar from "../Navbar/Navbar";
+import ProjectForm from '../CreateProject/ProjectForm.js';
 
 const AddMemberPopup = ({ isOpen, onClose, projectName, projectId, onMembersAdded }) => {
   const [query, setQuery] = useState("");
@@ -100,7 +101,7 @@ const AddMemberPopup = ({ isOpen, onClose, projectName, projectId, onMembersAdde
   return (
     <div className="popup-overlay">
       <div className="popup-container">
-        <div className="popup-header">
+        <div className="popup-header1">
           <h2>Add people to {projectName}</h2>
           <button className="close-button" onClick={onClose}>
             <CloseIcon />
@@ -113,7 +114,7 @@ const AddMemberPopup = ({ isOpen, onClose, projectName, projectId, onMembersAdde
             <div className="search-input-container">
               {selectedUsers.map(user => (
                 <div key={user.id} className="selected-user-tag">
-                  <img src={user.avatar || "https://i.pravatar.cc/32?img=1"} alt="" className="selected-user-avatar" />
+                  <img src={user.profilePicture || "/placeholder.jpg"} alt="" className="selected-user-avatar" />
                   <span>{user.name}</span>
                   <button onClick={() => handleRemoveUser(user.id)} className="remove-user-btn">×</button>
                 </div>
@@ -137,7 +138,7 @@ const AddMemberPopup = ({ isOpen, onClose, projectName, projectId, onMembersAdde
                       onClick={() => handleSelectUser(user)}
                     >
                       <div className="suggestion-avatar">
-                        <img src={user.avatar || "https://i.pravatar.cc/32?img=1"} alt="avatar" />
+                        <img src={user.profilePicture || "/placeholder.jpg"} alt="avatar" />
                       </div>
                       <div className="suggestion-info">
                         <div className="suggestion-name">{user.name}</div>
@@ -192,6 +193,103 @@ const AddMemberPopup = ({ isOpen, onClose, projectName, projectId, onMembersAdde
     </div>
   );
 };
+const DeleteProjectPopup = ({ isOpen, onClose, project, onDelete }) => {
+  const [deleting, setDeleting] = useState(false);
+  const [error, setError] = useState(null);
+
+  const handleDelete = async () => {
+    try {
+      setDeleting(true);
+      setError(null);
+      
+      // Call API to delete project
+      await axios.delete(
+        `http://localhost:9090/api/projects/${project.idprojet}`,
+        {
+          headers: {
+            "Authorization": "Bearer " + localStorage.getItem("token"),
+            "Content-Type": "application/json"
+          }
+        }
+      );
+      
+      // Call the onDelete callback to update UI
+      onDelete(project.idprojet);
+      onClose();
+    } catch (error) {
+      console.error("Error deleting project:", error);
+      if (error.response) {
+        if (error.response.status === 403) {
+          setError("Only the project owner can delete this project");
+        } else if (error.response.status === 404) {
+          setError("Project not found");
+        } else {
+          setError(`Error: ${error.response.data}`);
+        }
+      } else {
+        setError("Failed to delete project. Please try again.");
+      }
+    } finally {
+      setDeleting(false);
+    }
+  };
+
+  if (!isOpen) return null;
+
+  return (
+    <div className="popup-overlay">
+      <div className="popup-container">
+        <div className="popup-header">
+          <h2>Delete Project</h2>
+          <button className="close-button" onClick={onClose}>
+            <CloseIcon />
+          </button>
+        </div>
+        
+        <div className="popup-content">
+          <div className="warning-message">
+            <h3>Warning: This action cannot be undone</h3>
+            <p>
+              Are you sure you want to delete <strong>{project.nom}</strong>?
+            </p>
+            <p>
+              This will permanently delete:
+            </p>
+            <ul>
+              <li>All project data</li>
+              <li>All tasks associated with this project</li>
+              <li>All member associations</li>
+            </ul>
+            
+            {error && (
+              <div className="error-message">
+                {error}
+              </div>
+            )}
+          </div>
+        </div>
+        
+        <div className="popup-footer">
+          <button 
+            className="cancel-button" 
+            onClick={onClose}
+            disabled={deleting}
+          >
+            Cancel
+          </button>
+          <button 
+            className="delete-button" 
+            onClick={handleDelete}
+            disabled={deleting}
+          >
+            {deleting ? "Deleting..." : "Delete Project"}
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+};
+
 
 const ViewMembersPopup = ({ isOpen, onClose, projectName, projectId, onMemberDeleted }) => {
   const [members, setMembers] = useState([]);
@@ -275,7 +373,7 @@ const ViewMembersPopup = ({ isOpen, onClose, projectName, projectId, onMemberDel
   return (
     <div className="popup-overlay">
       <div className="popup-container">
-        <div className="popup-header">
+        <div className="popup-header1">
           <h2>Project Members - {projectName}</h2>
           <button className="close-button" onClick={onClose}>
             <CloseIcon />
@@ -304,7 +402,8 @@ const ViewMembersPopup = ({ isOpen, onClose, projectName, projectId, onMemberDel
                     <tr key={member.id} className="member-item">
                       <td className="member-info">
                         <img 
-                          src={member.avatar || "https://i.pravatar.cc/32?img=1"} 
+                        
+                          src={member.profilePicture || "/placeholder.jpg"} 
                           alt="avatar" 
                           className="member-avatar" 
                         />
@@ -445,21 +544,49 @@ export default function ProjectDashboard() {
   const [projects, setProjects] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [currentUser, setCurrentUser] = useState(null);
   const navigate = useNavigate();
 
   const itemsPerPage = 6;
   const [currentPage, setCurrentPage] = useState(1);
   const [isAddMemberPopupOpen, setIsAddMemberPopupOpen] = useState(false);
   const [isViewMembersPopupOpen, setIsViewMembersPopupOpen] = useState(false);
+  const [isEditPopupOpen, setIsEditPopupOpen] = useState(false);
+  const [isDeletePopupOpen, setIsDeletePopupOpen] = useState(false);
   const [currentProjectName, setCurrentProjectName] = useState("");
   const [currentProjectId, setCurrentProjectId] = useState(null);
-  const [isEditPopupOpen, setIsEditPopupOpen] = useState(false);
   const [currentProject, setCurrentProject] = useState(null);
+  const [projectMembers, setProjectMembers] = useState([]);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+
 
   const totalPages = Math.ceil(projects.length / itemsPerPage);
   
   const handleProjectClick = (projectId) => {
     navigate(`/project/${projectId}/tasks`);
+  };
+
+  const fetchCurrentUser = async () => {
+    try {
+      // Get current user's ID
+      const userId = localStorage.getItem("userId");
+      const token = localStorage.getItem("token");
+      
+      if (userId && token) {
+        const response = await axios.get(
+          `http://localhost:9090/api/user/${userId}`,
+          {
+            headers: {
+              "Content-Type": "application/json",
+              "Authorization": "Bearer " + token,
+            },
+          }
+        );
+        setCurrentUser(response.data);
+      }
+    } catch (err) {
+      console.error("Error fetching current user:", err);
+    }
   };
 
   const fetchProjects = async () => {
@@ -473,7 +600,7 @@ export default function ProjectDashboard() {
         {
           headers: {
             "Content-Type": "application/json",
-            "Authorization": "Bearer " + localStorage.getItem("token"),
+            "Authorization": "Bearer " + token,
           },
         }
       );
@@ -486,10 +613,36 @@ export default function ProjectDashboard() {
       setLoading(false);
     }
   };
+  const fetchProjectMembers = async (projectId) => {
+    try {
+      const response = await axios.get(
+        `http://localhost:9090/api/projects/${projectId}/members`,
+        {
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": "Bearer " + localStorage.getItem("token"),
+          },
+        }
+      );
+      const members = Array.isArray(response.data) ? response.data : [];
+      setProjectMembers(prev => ({ ...prev, [projectId]: members }));
+    } catch (err) {
+      console.error("Error fetching project members:", err);
+    }
+  };  
+  
 
   useEffect(() => {
+    fetchCurrentUser();
     fetchProjects();
   }, []);
+  useEffect(() => {
+    if (projects.length > 0) {
+      projects.forEach(project => {
+        fetchProjectMembers(project.idprojet);
+      });
+    }
+  }, [projects]);
 
   const startIndex = (currentPage - 1) * itemsPerPage;
   const currentProjects = projects.slice(startIndex, startIndex + itemsPerPage);
@@ -521,6 +674,16 @@ export default function ProjectDashboard() {
     setIsEditPopupOpen(true);
   };
 
+  const handleDeleteClick = (project) => {
+    setCurrentProject(project);
+    setIsDeletePopupOpen(true);
+  };
+
+  const handleProjectDeleted = (projectId) => {
+    // Remove the deleted project from state
+    setProjects(projects.filter(project => project.idprojet !== projectId));
+  };
+
   const openViewMembersPopup = (projectName, projectId) => {
     setCurrentProjectName(projectName);
     setCurrentProjectId(projectId);
@@ -529,6 +692,17 @@ export default function ProjectDashboard() {
 
   const closeViewMembersPopup = () => {
     setIsViewMembersPopupOpen(false);
+  };
+
+  // Function to check if current user is the owner of a project
+  const isProjectOwner = (project) => {
+    if (!currentUser || !project) return false;
+    return currentUser.id === project.ownerId;
+  };
+  const handleProjectCreated = (newProject) => {
+    setProjects(prevProjects => [newProject, ...prevProjects]);
+    // Refetch project data to ensure we have all the details
+    fetchProjects();
   };
 
   return (
@@ -540,7 +714,12 @@ export default function ProjectDashboard() {
           <div className="projects-page">
             <div className="projects-header">
               <h1>Projects</h1>
-              <button className="create-button" onClick={() => navigate("/create-project")}>Create</button>
+              <button 
+                className="create-button" 
+                onClick={() => setIsSidebarOpen(true)}
+              >
+                Create
+              </button>
             </div>
 
             {loading ? (
@@ -560,9 +739,20 @@ export default function ProjectDashboard() {
                           >
                             {project.nom}
                           </span>
-                          <span className="edit-icon" title="Edit" onClick={() => handleEditClick(project)}>
-                            <EditNoteOutlinedIcon />
-                          </span>
+                          <div className="project-actions">
+                            <span className="edit-icon" title="Edit" onClick={() => handleEditClick(project)}>
+                              <EditNoteOutlinedIcon />
+                            </span>
+                            {isProjectOwner(project) && (
+                              <span 
+                                className="delete-icon" 
+                                title="Delete Project" 
+                                onClick={() => handleDeleteClick(project)}
+                              >
+                                <DeleteOutlineIcon />
+                              </span>
+                            )}
+                          </div>
                         </div>
                         <span className="badge badge-offline">
                           {project.status || "Offline"}
@@ -583,13 +773,19 @@ export default function ProjectDashboard() {
                           </button>
                           
                           <div 
-                            className="member-avatars"
+                            className="task-members"
                             onClick={() => openViewMembersPopup(project.nom, project.idprojet)}
                             style={{ cursor: 'pointer' }}
                           >
-                            <img src={`https://i.pravatar.cc/32?img=1`} alt="avatar1" className="avatar" />
-                            <img src={`https://i.pravatar.cc/32?img=2`} alt="avatar2" className="avatar" />
-                            <img src={`https://i.pravatar.cc/32?img=3`} alt="avatar3" className="avatar" />
+                            
+                            {projectMembers[project.idprojet]?.slice(0, 3).map((member, index) => (
+                              <img
+                                key={index}
+                                src={member.profilePicture || "placeholder.jpg"}
+                                alt={member.name}
+                                className="avatar"
+                              />
+                            ))}
                           </div>
                         </div>
                         <div className="project-issues">
@@ -641,6 +837,14 @@ export default function ProjectDashboard() {
         onSave={handleSaveProject}
       />
 
+      {/* Delete Project Popup */}
+      <DeleteProjectPopup
+        isOpen={isDeletePopupOpen}
+        onClose={() => setIsDeletePopupOpen(false)}
+        project={currentProject}
+        onDelete={handleProjectDeleted}
+      />
+
       {/* Add Member Popup */}
       <AddMemberPopup 
         isOpen={isAddMemberPopupOpen}
@@ -657,6 +861,11 @@ export default function ProjectDashboard() {
         projectName={currentProjectName}
         projectId={currentProjectId}
         onMemberDeleted={fetchProjects}
+      />
+      <ProjectForm 
+        isOpen={isSidebarOpen}
+        onClose={() => setIsSidebarOpen(false)}
+        onProjectCreated={handleProjectCreated}
       />
     </div>
   );

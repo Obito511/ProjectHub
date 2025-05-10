@@ -143,7 +143,7 @@ const TaskForm = () => {
                   <input type="date" name="endDate" value={task.endDate} onChange={handleChange} />
                 </div>
               </div>
-              <div className="select-group">
+              <div className="select-group1">
                 <label>Project</label>
                 <select name="project" value={task.project} onChange={handleChange}>
                   <option value="">Select a project</option>
@@ -154,7 +154,7 @@ const TaskForm = () => {
               </div>
               <textarea name="description" placeholder="Task Description" value={task.description} onChange={handleChange} />
               <div className="task-op-row">
-                <div className="select-group">
+                <div className="select-group1">
                   <label>Priority</label>
                   <select name="priority" value={task.priority} onChange={handleChange}>
                     <option value="">Select Priority</option>
@@ -163,7 +163,7 @@ const TaskForm = () => {
                     ))}
                   </select>
                 </div>
-                <div className="select-group">
+                <div className="select-group1">
                   <label>Status</label>
                   <select name="status" value={task.status} onChange={handleChange}>
                     <option value="">Select Status</option>

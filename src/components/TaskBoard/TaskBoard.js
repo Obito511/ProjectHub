@@ -10,15 +10,37 @@ import Navbar from "../Navbar/Navbar";
 import { useParams } from "react-router-dom";
 import axios from "axios";
 import AssignMembersPopup from "../AssignMembersPopup/AssignMembersPopup";
-
+import TaskCommentsPopup from "./TaskCommentsPopup";
+import DeleteIcon from "@mui/icons-material/Delete";
+import DeleteTaskPopup from "./DeleteTaskPopup";
 const TaskBoard = () => {
   const { projectId } = useParams();
   const [view, setView] = useState("Grid View");
   const [projectName, setProjectName] = useState("");
+  const [projectOwner, setProjectOwner] = useState("");
+
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [isAssignMembersOpen, setIsAssignMembersOpen] = useState(false);
   const [currentTaskId, setCurrentTaskId] = useState(null);
+  const [currentTaskTitle, setCurrentTaskTitle] = useState("");
+  const [isCommentsOpen, setIsCommentsOpen] = useState(false);
+  const [isDeletePopupOpen, setIsDeletePopupOpen] = useState(false);
+  const [currentUser, setCurrentUser] = useState(null);
+
+const [currentTaskToDelete, setCurrentTaskToDelete] = useState({ 
+  id: null, 
+  title: '' 
+});
+const handleTaskDeleted = (deletedTaskId) => {
+  const updatedColumns = { ...columns };
+  Object.keys(updatedColumns).forEach((columnKey) => {
+    updatedColumns[columnKey] = updatedColumns[columnKey].filter(
+      (task) => task.id !== deletedTaskId
+    );
+  });
+  setColumns(updatedColumns);
+};
 
   const [columns, setColumns] = useState({
     backlog: [],
@@ -49,7 +71,30 @@ const TaskBoard = () => {
     const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
     return diffDays > 0 ? diffDays : 0;
   };
+  const fetchCurrentUser = async () => {
+    try {
+      // Get current user's ID
+      const userId = localStorage.getItem("userId");
+      const token = localStorage.getItem("token");
+      
+      if (userId && token) {
+        const response = await axios.get(
+          `http://localhost:9090/api/user/${userId}`,
+          {
+            headers: {
+              "Content-Type": "application/json",
+              "Authorization": "Bearer " + token,
+            },
+          }
+        );
+        setCurrentUser(response.data);
+      }
+    } catch (err) {
+      console.error("Error fetching current user:", err);
+    }
+  };
 
+  
   // Fetch project and tasks
   useEffect(() => {
     if (!projectId) return;
@@ -70,6 +115,10 @@ const TaskBoard = () => {
         );
         
         setProjectName(projectResponse.data.nom || "Project Tasks");
+        console.log("Project data:", projectResponse.data);
+
+
+
         
         // Fetch tasks for this project
         const tasksResponse = await axios.get(
@@ -81,7 +130,6 @@ const TaskBoard = () => {
             },
           }
         );
-        console.log(tasksResponse.data)
         
         // Organize tasks by status
         const tasksByStatus = {
@@ -92,11 +140,11 @@ const TaskBoard = () => {
         
         if (Array.isArray(tasksResponse.data)) {
           tasksResponse.data.forEach(task => {
-            const status = task.status?.name?.toLowerCase() || "backlog";
+            const status = task.statusId || "1";
             
-            if (status === "completed" || status === "done") {
+            if (status == "3") {
               tasksByStatus.completed.push(formatTask(task));
-            } else if (status === "in progress" || status === "inprogress" || status === "in-progress") {
+            } else if (status == "2") {
               tasksByStatus.inProgress.push(formatTask(task));
             } else {
               tasksByStatus.backlog.push(formatTask(task));
@@ -134,6 +182,7 @@ const TaskBoard = () => {
     
     fetchProjectData();
   }, [projectId]);
+  
 
   const onDragEnd = (result) => {
     if (!result.destination) return;
@@ -203,10 +252,14 @@ const TaskBoard = () => {
     setIsAssignMembersOpen(true);
   };
 
-  // Add this function to handle member assignment
+  const handleOpenComments = (taskId, taskTitle) => {
+    setCurrentTaskId(taskId);
+    setCurrentTaskTitle(taskTitle);
+    setIsCommentsOpen(true);
+  };
+
   const handleMemberAssigned = async (memberId) => {
     try {
-      // Refresh the task data to show the new assignee
       const tasksResponse = await axios.get(
         `http://localhost:9090/api/tasks/project/${projectId}`,
         {
@@ -226,11 +279,11 @@ const TaskBoard = () => {
       
       if (Array.isArray(tasksResponse.data)) {
         tasksResponse.data.forEach(task => {
-          const status = task.status?.name?.toLowerCase() || "backlog";
+          const status = task.statusId || 1;
           
-          if (status === "completed" || status === "done") {
+          if (status === 3) {
             tasksByStatus.completed.push(formatTask(task));
-          } else if (status === "in progress" || status === "inprogress" || status === "in-progress") {
+          } else if (status === 2) {
             tasksByStatus.inProgress.push(formatTask(task));
           } else {
             tasksByStatus.backlog.push(formatTask(task));
@@ -257,10 +310,29 @@ const TaskBoard = () => {
           <div className="drag-handle">
             <h4>{task.title}</h4>
             <span>{task.days} Days</span>
+           
+                              <span 
+                              className="delete-icon-container"
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                setCurrentTaskToDelete({ id: task.id, title: task.title });
+                                setIsDeletePopupOpen(true);
+                              }}
+                            >
+                              <DeleteIcon className="icon delete-icon" />
+                            </span>
+            
           </div>
           <p className="disc">{task.description}</p>
           <div className="task-info">
-            <span>
+            <span 
+              className="comment-icon-container"
+              onClick={(e) => {
+                e.stopPropagation(); // Prevent dragging when clicking
+                handleOpenComments(task.id, task.title);
+              }}
+            >
+              
               <CommentIcon className="icon" /> {task.comments}
             </span>
             <span>
@@ -279,7 +351,7 @@ const TaskBoard = () => {
               {task.users.map((user, idx) => (
                 <img
                   key={idx}
-                  src={`https://i.pravatar.cc/32?img=${idx + 1}`}
+                  src={user?.profilePicture || "/placeholder.jpg"}
                   alt={`User ${idx}`}
                   className="avatar"
                 />
@@ -290,6 +362,8 @@ const TaskBoard = () => {
       )}
     </Draggable>
   );
+  
+  
 
   return (
     <div className="App">
@@ -398,8 +472,18 @@ const TaskBoard = () => {
           </div>
         </div>
       </div>
+      {isDeletePopupOpen && (
+        <DeleteTaskPopup
+          isOpen={isDeletePopupOpen}
+          onClose={() => setIsDeletePopupOpen(false)}
+          taskId={currentTaskToDelete.id}
+          taskTitle={currentTaskToDelete.title}
+          projectId={projectId}
+          onTaskDeleted={handleTaskDeleted}
+        />
+      )}
       
-      {/* Render the AssignMembersPopup component here */}
+      {/* Render the AssignMembersPopup component */}
       {isAssignMembersOpen && (
         <AssignMembersPopup
           isOpen={isAssignMembersOpen}
@@ -408,6 +492,16 @@ const TaskBoard = () => {
           projectId={projectId}
           taskId={currentTaskId}
           onMemberAssigned={handleMemberAssigned}
+        />
+      )}
+
+      {/* Render the TaskCommentsPopup component */}
+      {isCommentsOpen && (
+        <TaskCommentsPopup
+          isOpen={isCommentsOpen}
+          onClose={() => setIsCommentsOpen(false)}
+          taskId={currentTaskId}
+          taskTitle={currentTaskTitle}
         />
       )}
     </div>

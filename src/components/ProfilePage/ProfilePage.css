@@ -1,17 +1,18 @@
-.div2_prof{
-  
-    display: flex;
-    flex-direction: row;
-    flex: 1; /* Takes remaining space */
-    gap :3%;
-  
+.div2_prof { 
+  display: flex;
+  flex-direction: row;
+  flex: 1;
+  gap: 3%;
 }
+
 .profile-content-area {
   display: flex;
   flex-direction: row;
   gap: 20px;
   padding: 20px;
   max-width: 950px;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .profile-left,
@@ -20,5 +21,32 @@
   flex: 1;
   display: flex;
   flex-direction: column;
- 
+}
+
+/* RESPONSIVE */
+@media (max-width: 1024px) {
+.div2_prof {
+  flex-direction: column;
+  gap: 20px;
+}
+
+.profile-content-area {
+  flex-direction: column;
+  max-width: 100%;
+  align-items: center;
+}
+
+.profile-left,
+.profile-center,
+.profile-right {
+  width: 100%;
+}
+
+}
+
+@media (max-width: 600px) {
+.profile-content-area {
+  padding: 200px;
+  gap: 15px;
+}
 }

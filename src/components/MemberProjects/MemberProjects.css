@@ -10,7 +10,7 @@
     color: #333;
   }
   
-  .popup-overlay {
+  .popup-overlay1 {
     position: fixed;
     top: 0;
     left: 0;
@@ -23,7 +23,7 @@
     z-index: 1000;
   }
   
-  .popup-container {
+  .popup-container1 {
     background: white;
     border-radius: 8px;
     width: 500px;
@@ -286,8 +286,7 @@
     flex-direction: column;
   }
   
-  /* Popup Header */
-  .popup-header {
+  .popup-header1 {
     display: flex;
     justify-content: space-between;
     align-items: center;
