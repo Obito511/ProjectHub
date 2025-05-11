@@ -23,6 +23,32 @@ function Vnavbar({ isMobileOpen, setIsMobileOpen }) {
       setIsMobileOpen(false);
     }
   };
+  function runAnalysisOnPageLoad() {
+    fetch('http://localhost:9090/api/reminders/run-analysis', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            // Add any required headers, e.g., Authorization if needed
+        },
+        body: JSON.stringify({}) // Add your request body here if needed
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+        return response.json();
+    })
+    .then(data => {
+        console.log('Analysis response:', data);
+        // Handle the response data as needed
+    })
+    .catch(error => {
+        console.error('Error calling run-analysis API:', error);
+    });
+}
+
+// Call the function when the page loads
+window.onload = runAnalysisOnPageLoad;
 
   return (
     <div className={`sidebar ${isMobileOpen ? 'mobile-open' : ''}`}>
